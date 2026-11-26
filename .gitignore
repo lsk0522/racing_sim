@@ -1,0 +1,5 @@
+.pio/
+__pycache__/
+*.pyc
+shifter/cad/out/
+.DS_Store
