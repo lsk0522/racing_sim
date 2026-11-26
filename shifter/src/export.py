@@ -72,7 +72,8 @@ if __name__ == "__main__":
     ap.add_argument("--out", default=os.path.join("..", "CAD", VERSION))
     a = ap.parse_args()
     OUT = a.out
-    shutil.rmtree(OUT, ignore_errors=True)
+    for d in ["mach", "print", "buy", "assembly"]:      # 산출물만 지우고 README.md 등 손으로 쓴 파일은 유지
+        shutil.rmtree(os.path.join(OUT, d), ignore_errors=True)
     for d in ["mach/sheet", "mach/block", "print", "buy", "assembly/sub"]:
         os.makedirs(f"{OUT}/{d}", exist_ok=True)
 
