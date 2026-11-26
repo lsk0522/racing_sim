@@ -1,0 +1,31 @@
+part: tower_negY
+part_no: LSK-SH-M2-01
+name: −Y 타워
+material: Al 6061-T6
+stock: 6t 판재 125×125
+process: CNC 2.5D (판재)
+rev: v0.5
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.3
+  - 비드 블라스트 #120
+  - 블랙 아노다이징 Type II 8~12µm (ISO 7599) — Ø16 보어 마스킹
+dims:
+  - {view: front, type: diameter, center: [0, -53, 0], r: 8.0, fit: M7, angle: 45}
+  - {view: front, type: linear, p1: [0, -53, -66], p2: [0, -53, 0], dir: v, side: right, tol: "±0.02"}
+  - {view: front, type: linear, p1: [0, -53, 0], p2: [32, -53, 0], dir: h, side: above, tol: "±0.02"}
+  - {view: front, type: linear, p1: [-11, -53, 0], p2: [11, -53, 0], dir: h, side: below, tol: "±0.05"}
+datums:
+  A: {view: right, at: [0, -50, 30], dx: 12, dy: 0}
+  B: {view: front, at: [-50, -53, -66], dx: 0, dy: -9}
+  C: {view: front, at: [32, -53, -40], dx: 11, dy: 0}
+gdt:
+  - {view: front, at: [-5.66, -53, 5.66], symbol: position, tol: "Ø0.03", datums: [A, B, C], dx: -62, dy: 18}
+  - {view: front, at: [-36, -53, 53.5], symbol: parallelism, tol: "0.03", datums: [B], dx: -10, dy: 8}
+  - {view: right, at: [0, -50, -30], symbol: flatness, tol: "0.03", dx: 10, dy: -4}
+  - {view: front, at: [-5.66, -53, -5.66], symbol: perpendicularity, tol: "Ø0.02", datums: [A], dx: -56, dy: 15}
+roughness:
+  - {view: front, at: [5.66, -53, -5.66], value: "Ra 1.6", dx: 8, dy: -16}
+notes:
+  - "Ø16 M7 보어: F625ZZ 플랜지 베어링 압입 (바깥면에서), 반대쪽 타워(M2-02)와 위치 동일 가공"
+  - "M3 탭 ×2 (센서 캡, Ø16 좌우 ±11), 윗면 M3 탭 ×2 깊이 8 (X −30 / 22, 게이트), 아랫면 M4 탭 ×2 깊이 9 (X −70 / 26)"
+  - "바깥면 케이블 홈 3×2 (X −11.5~−8.5, 보어 아래 ~ 바닥)"

@@ -1,0 +1,31 @@
+﻿품번,부품,모듈,폴더,소재,수량,X,Y,Z,파일
+M1-01,base,M1 베이스·전자부,mach/sheet,6061 8t,1,133.0,127.0,8.0,M1-01_base.step M1-01_base_8t.dxf
+M1-02,bottom_cover,M1 베이스·전자부,print,PETG,1,133.0,127.0,2.0,M1-02_bottom_cover.step M1-02_bottom_cover.stl
+M2-01,tower_negY,M2 타워,mach/sheet,6061 6t,1,112.0,6.0,119.5,M2-01_tower_negY.step M2-01_tower_negY_6t.dxf
+M2-02,tower_posY,M2 타워,mach/sheet,6061 6t,1,112.0,6.0,119.5,M2-02_tower_posY.step M2-02_tower_posY_6t.dxf
+M3-01,cradle,M3 짐벌 코어,mach/block,6061 블록,1,36.0,53.0,32.0,M3-01_cradle.step
+M3-02,hub,M3 짐벌 코어,mach/block,6061 블록,1,22.0,14.0,32.0,M3-02_hub.step
+M3-03,tail_cap,M3 짐벌 코어,print,PETG,1,10.0,10.0,6.5,M3-03_tail_cap.step M3-03_tail_cap.stl
+M3-04,lever_bar,M3 짐벌 코어,buy,Ø8 h6 경화축,1,8.0,8.0,114.0,M3-04_lever_bar.step
+M3-05,hollow_pin,M3 짐벌 코어,buy,Ø5×3 중공 핀,1,5.0,17.5,5.0,M3-05_hollow_pin.step
+M3-06,tail_bolt,M3 짐벌 코어,buy,M5 볼트,1,9.2,8.0,48.5,M3-06_tail_bolt.step
+M4-01,cartridge,M4 좌우 스프링,print,PETG,1,20.0,73.0,19.0,M4-01_cartridge.step M4-01_cartridge.stl
+M4-02,plunger_S1_L,M4 좌우 스프링,print,PETG,1,6.8,8.0,7.6,M4-02_plunger_S1_L.step M4-02_plunger_S1_L.stl
+M4-03,plunger_S1_R,M4 좌우 스프링,print,PETG,1,6.8,8.0,7.6,M4-03_plunger_S1_R.step M4-03_plunger_S1_R.stl
+M4-04,plunger_S2,M4 좌우 스프링,print,PETG,1,10.6,8.0,7.6,M4-04_plunger_S2.step M4-04_plunger_S2.stl
+M4-05,cup_S2,M4 좌우 스프링,print,PETG,1,8.2,2.0,8.2,M4-05_cup_S2.step M4-05_cup_S2.stl
+M5-01,cam,M5 디텐트 카세트,mach/sheet,6061 17t→16.5,1,36.9,16.5,53.1,M5-01_cam.step M5-01_cam_16.5t.dxf
+M5-02,cassette,M5 디텐트 카세트,mach/block,6061 블록,1,56.0,28.9,51.3,M5-02_cassette.step
+M5-03,arm_plate,M5 디텐트 카세트,mach/sheet,6061 3t,2,75.5,3.0,9.0,M5-03_arm_plate.step M5-03_arm_plate_3t_x2.dxf
+M5-04,rollers,M5 디텐트 카세트,buy,625ZZ ×3,1,16.0,15.6,16.0,M5-04_rollers.step
+M6-01,seq_lock,M6 SEQ 잠금,mach/sheet,6061 10t,1,50.0,25.3,9.0,M6-01_seq_lock.step
+M6-02,eccentric,M6 SEQ 잠금,mach/block,6061 Ø14 봉,1,8.0,11.0,11.0,M6-02_eccentric.step
+M6-03,lock_pivot,M6 SEQ 잠금,print,PETG,1,12.0,24.0,12.0,M6-03_lock_pivot.step M6-03_lock_pivot.stl
+M6-04,shaft_bearings,M6 SEQ 잠금,print,PETG,1,21.0,12.0,8.5,M6-04_shaft_bearings.step M6-04_shaft_bearings.stl
+M6-05,mode_knob,M6 SEQ 잠금,print,ABS/PETG,1,8.0,19.0,19.0,M6-05_mode_knob.step M6-05_mode_knob.stl
+M7-01,gate,M7 게이트,mach/sheet,6061 3t,1,76.0,98.0,3.0,M7-01_gate.step M7-01_gate_3t.dxf
+M8-01,knob,M8 노브,print,ABS (도장),1,35.0,35.0,36.5,M8-01_knob.step M8-01_knob.stl
+M9-01,pitch_sensor_cap,M9 센서 캡,print,PETG,1,28.0,8.0,28.0,M9-01_pitch_sensor_cap.step M9-01_pitch_sensor_cap.stl
+M9-02,roll_sensor_cap,M9 센서 캡,print,PETG,1,9.0,25.0,24.0,M9-02_roll_sensor_cap.step M9-02_roll_sensor_cap.stl
+M9-03,pin_collar,M9 센서 캡,print,PETG,1,12.0,4.0,12.0,M9-03_pin_collar.step M9-03_pin_collar.stl
+M10-01,shell,M10 외장 셸,print,ABS (도장),1,127.0,121.0,119.5,M10-01_shell.step M10-01_shell.stl

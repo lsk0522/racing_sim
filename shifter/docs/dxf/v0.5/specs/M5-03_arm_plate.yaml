@@ -1,0 +1,22 @@
+part: arm_plate
+part_no: LSK-SH-M5-03
+name: 팔로워 암 판 (2장 동일)
+material: Al 6061-T6
+stock: 3t 판재 80×12 (2장 겹쳐 동시 가공)
+process: CNC 2.5D (판재)
+rev: v0.5
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.2
+  - 비드 블라스트 + 투명 아노다이징 Type II — Ø5 H8 구멍 마스킹
+dims:
+  - {view: front, type: linear, p1: [-30, -24, -45], p2: [0, -24, -45], dir: h, side: above, tol: "±0.02"}
+  - {view: front, type: linear, p1: [-65, -24, -45], p2: [-30, -24, -45], dir: h, side: above, tol: "±0.05"}
+  - {view: front, type: diameter, center: [0, -24, -45], r: 2.5, fit: H8, angle: 45}
+  - {view: front, type: diameter, center: [-30, -24, -45], r: 2.5, fit: H8, angle: 135}
+datums:
+  A: {view: front, at: [-31.8, -24, -46.8], dx: -6, dy: -24}
+gdt:
+  - {view: front, at: [1.77, -24, -43.2], symbol: parallelism, tol: "Ø0.02", datums: [A], dx: 14, dy: 14}
+notes:
+  - "롤러축 Ø5 H8 (M5 / Ø5 숄더볼트 + 625ZZ ×3), 피벗 Ø5 H8 — 두 구멍 간격 30 ±0.02 (캠 계산값)"
+  - "Ø3.2 ×2: 스프링 패드 블록·스페이서 체결 (M3)"

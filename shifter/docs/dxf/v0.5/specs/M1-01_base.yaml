@@ -1,0 +1,29 @@
+part: base
+part_no: LSK-SH-M1-01
+name: 베이스 (전자부 포켓)
+material: Al 6061-T6
+stock: 8t 판재 140×135
+process: CNC 2.5D 양면 (윗면 → 뒤집어 바닥 포켓)
+views: [front, top]
+hidden_views: [top]
+rev: v0.5
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.3
+  - 비드 블라스트 #120
+  - 블랙 아노다이징 Type II 8~12µm
+  - (선택) 외곽 모따기 C0.8 아노다이징 후 재가공 → 금속면 노출(다이아몬드 컷), 투명 아노다이징 2차
+dims:
+  - {view: top, type: linear, p1: [-70, -53, -66], p2: [26, -53, -66], dir: h, side: below, tol: "±0.05"}
+  - {view: top, type: linear, p1: [-70, -53, -66], p2: [-70, 31, -66], dir: v, side: left, tol: "±0.05"}
+  - {view: top, type: linear, p1: [-72, -24, -66], p2: [-28, -24, -66], dir: h, side: above, tol: "±0.1"}
+datums:
+  A: {view: front, at: [-30, 0, -66], dx: 0, dy: 10}
+gdt:
+  - {view: front, at: [10, 0, -66], symbol: flatness, tol: "0.05", dx: 6, dy: 12}
+  - {view: top, at: [28.2, 31, -66], symbol: position, tol: "Ø0.05", datums: [A], dx: 16, dy: 14}
+notes:
+  - "타워 고정 4×Ø4.4 관통 + 바닥면 90° 접시 Ø8.8 (M4 접시머리) — 위치도 4구멍 공통"
+  - "카세트 4×Ø3.4 관통 + 바닥 접시, 셸 보스 4×Ø3.4 관통 + 바닥 접시"
+  - "SEQ 잠금 피벗 4×M3 탭 깊이 6 (윗면), 편심 릴리프 10×14 깊이 6.5 (윗면)"
+  - "바닥면: RP2040 포켓 34×26 깊이 5, 케이블 홈 4×3, USB-C 슬롯 12×4, M6 탭 4× 깊이 6 (40mm 간격, 리그 장착)"
+  - "앞쪽 반원 홈 R12.5 (모드 노브)"

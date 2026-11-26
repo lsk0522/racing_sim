@@ -1,0 +1,24 @@
+part: seq_lock
+part_no: LSK-SH-M6-01
+name: 시퀀셜 잠금 암
+material: Al 6061-T6
+stock: 10t 판재 55×30
+process: CNC 3축 2면
+rev: v0.5
+finish:
+  - 바리 제거, 포켓 윗모서리 R0.3
+  - 하드 아노다이징 Type III 25µm (스톱 하중·마모) — 피벗 구멍 마스킹
+dims:
+  - {view: top, type: linear, p1: [0, -5.3, -56], p2: [0, 5.3, -56], dir: v, side: right, tol: "+0.1/0"}
+  - {view: top, type: linear, p1: [-30, 0, -56], p2: [-11, 0, -56], dir: h, side: above, tol: "±0.05"}
+  - {view: top, type: linear, p1: [-30, 0, -56], p2: [13.2, 0, -56], dir: h, side: above, tol: "±0.05"}
+  - {view: front, type: linear, p1: [0, -8.3, -62.5], p2: [0, -8.3, -56], dir: v, side: right, tol: "+0.1/0"}
+  - {view: front, type: diameter, center: [-30, -8.3, -60], r: 1.5, fit: H8, angle: 135}
+datums:
+  A: {view: front, at: [-31.06, -8.3, -61.06], dx: -10, dy: -10}
+gdt:
+  - {view: top, at: [13.2, 2, -56], symbol: position, tol: "0.05", datums: [A], dx: 16, dy: 14}
+notes:
+  - "포켓 길이 비대칭 (피벗 쪽 11.0 / 앞쪽 13.2): 들어 올릴 때 기울기를 보정해 양쪽 모두 ±8°에서 정지"
+  - "피벗 Ø3 H8 — Ø3 다웰핀(m6) (모델 Ø3.2는 대표 형상, 도면 우선)"
+  - "옆 탭(편심이 받치는 면) 윗면 평활 Ra 0.8"

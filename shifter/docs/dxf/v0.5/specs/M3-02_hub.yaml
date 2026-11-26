@@ -1,0 +1,24 @@
+part: hub
+part_no: LSK-SH-M3-02
+name: 허브 (레버 홀더)
+material: Al 6061-T6
+stock: 블록 26×18×36
+process: CNC 3축 2면
+rev: v0.5
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.2
+  - 비드 블라스트 #150, 투명 아노다이징 Type II — Ø8 보어 마스킹
+dims:
+  - {view: top, type: diameter, center: [0, 0, 18], r: 4.0, fit: H7, angle: 45}
+  - {view: front, type: linear, p1: [-11, 0, 0], p2: [11, 0, 0], dir: h, side: above, tol: "-0.02/-0.06"}
+  - {view: front, type: linear, p1: [0, 0, 3], p2: [0, 0, 18], dir: v, side: right, tol: "+0.2/0"}
+  - {view: right, type: diameter, center: [10, 0, 0], r: 2.55, angle: 45}
+datums:
+  A: {view: right, at: [10, 1.8, -1.8], dx: 10, dy: -12}
+gdt:
+  - {view: top, at: [2.83, 2.83, 18], symbol: perpendicularity, tol: "Ø0.02", datums: [A], dx: 14, dy: 12}
+  - {view: top, at: [-2.83, -2.83, 18], symbol: position, tol: "Ø0.03", datums: [A], dx: -40, dy: -16}
+notes:
+  - "Ø8 H7: 경화 리니어 샤프트 Ø8 h6 (헐거운 끼워맞춤) + M4 무두볼트 ×2 고정 (+X면 M4 탭, Z 9 / 14)"
+  - "양 보스 폭 22 −0.02/−0.06 ↔ 크래들 내폭 22 +0.02/0 → 축방향 틈 0.02~0.08 (625 내륜만 접촉)"
+  - "아래 M5 관통 + 옆 슬롯 M5 너트 (8.2 폭, Z −12.2~−7.8): 꼬리 볼트"

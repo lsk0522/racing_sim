@@ -20,10 +20,11 @@
 PROGRESS.md            진행 상황 (매 작업마다 갱신)
 docs/                  프로젝트 공통 문서
 shifter/
-  hardware/            M1~M10 모듈별 STEP·STL·DXF, 조립 STEP, BOM
-  cad/                 파라메트릭 CAD 소스 (build123d) + 버전별 아카이브
+  CAD/v0.X/            버전별 산출물: mach/sheet · mach/block · print · buy · assembly
+  src/                 파라메트릭 CAD·도면 소스 (build123d) + 버전별 아카이브
   firmware/            RP2040 펌웨어 (PlatformIO) + 빌드된 UF2
   docs/                설계 문서 (현재 + 이력)
+  docs/dxf/v0.X/       가공 도면 (DXF·PDF + YAML 원본: 치수·공차·기하공차·후처리)
   images/              렌더, 손맛 곡선, 배선도
 pedals/  wheel/        다음 모듈 (예정)
 ```

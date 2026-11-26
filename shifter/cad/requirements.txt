@@ -1,8 +1,0 @@
-build123d>=0.13
-shapely
-numpy
-scipy
-matplotlib
-trimesh
-ezdxf
-pyrender   # optional, for render_pbr.py (needs EGL/OpenGL)
