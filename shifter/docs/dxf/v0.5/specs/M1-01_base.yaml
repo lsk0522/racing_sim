@@ -6,10 +6,11 @@ stock: 8t 판재 140×135
 process: CNC 2.5D 양면 (윗면 → 뒤집어 바닥 포켓)
 views: [front, top]
 hidden_views: [top]
-rev: B
+rev: C
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
+  - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3
   - 비드 블라스트 #120

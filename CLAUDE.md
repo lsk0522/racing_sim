@@ -12,7 +12,8 @@
   - 파일 이름은 `품번_부품` (예: `M2-01_tower_negY.step`). 새 부품은 `export.py`의 `CATALOG`에 품번·폴더를 등록.
 - 도면은 `shifter/docs/dxf/vX.Y/specs/*.yaml`이 원본 (치수·공차·기하공차·후처리). 수정 후 `src/make_drawings.py`로 DXF·PDF·PNG 재생성.
   - 도면 형상은 `export.py`가 만든 **STEP**에서 은선 처리한다 (STL·메시 금지). 순서: `check.py` → `export.py` → `make_drawings.py`.
-  - 용지는 **A4 세로가 기본** (ISO 5457 윤곽, ISO 7200 표제란, ISO 128 선, ISO 3098 문자).
+  - 용지는 **A4 가로가 기본**, **흑백**(흰 바탕·검정 선, 굵기·선 종류로만 구분). 윤곽선 + 중심 마크만 (구역 표시 없음).
+  - KS 양식 배치: 왼쪽 위 품번 ①과 표면 거칠기, 오른쪽 칸 위→아래로 개정 이력 · 주서 · 부품란 · 표제란. 치수 문자 3.5, 주서 3.0.
   - 2D 형상을 돌출할 때는 `cad.xz_prism`/`xy_prism`(→ `smooth2d`)을 써서 직선·원호·스플라인 면을 만든다. 각진 다각형 면을 STEP에 남기지 않는다.
   - 일반 공차 ISO 2768-mK, 끼워맞춤 ISO 286, 기하공차 ISO 1101, 모서리 ISO 13715, 거칠기 ISO 21920, 3각법, 척도 ISO 5455.
   - 도면을 고치면 해당 YAML의 `rev`/`revisions`도 올린다.

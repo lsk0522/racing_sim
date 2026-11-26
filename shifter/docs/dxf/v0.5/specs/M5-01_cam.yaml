@@ -4,10 +4,12 @@ name: 디텐트 캠 (H 트랙)
 material: Al 6061-T6
 stock: 17t 판재 45×60
 process: CNC 2.5D 윤곽 (트랙 정삭 1패스)
-rev: B
+views: [front, right]
+rev: C
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
+  - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
 roughness_default: Ra 1.6
 finish:
   - 트랙면 정삭 후 버핑 (Ra 0.8)
@@ -21,10 +23,10 @@ dims:
   - {view: right, type: linear, p1: [0, -43, 16], p2: [0, -26.5, 16], dir: h, side: above, tol: "±0.05"}
 datums:
   A: {view: front, at: [1.77, -26.5, -1.77], dx: 14, dy: -6}
-  B: {view: right, at: [0, -26.5, -10], dx: 10, dy: 0}
+  B: {view: right, at: [0, -26.5, -20], dx: 3, dy: -14}
 gdt:
   - {view: front, at: [0, -26.5, -37], symbol: profile_line, tol: "0.02", datums: [A, B], dx: 24, dy: 6}
-  - {view: right, at: [0, -26.5, 10], symbol: flatness, tol: "0.02", dx: -12, dy: 30}
+  - {view: right, at: [0, -26.5, 10], symbol: flatness, tol: "0.02", dx: -22, dy: 22}
 roughness:
   - {view: front, at: [-8, -26.5, -36.2], value: "Ra 0.8", dx: -26, dy: 8}
 notes:
