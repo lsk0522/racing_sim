@@ -14,7 +14,7 @@ M4-02,plunger_S1_L,M4 좌우 스프링,print,PETG,1,6.8,8.0,7.6,M4-02_plunger_S1
 M4-03,plunger_S1_R,M4 좌우 스프링,print,PETG,1,6.8,8.0,7.6,M4-03_plunger_S1_R.step M4-03_plunger_S1_R.stl
 M4-04,plunger_S2,M4 좌우 스프링,print,PETG,1,10.6,8.0,7.6,M4-04_plunger_S2.step M4-04_plunger_S2.stl
 M4-05,cup_S2,M4 좌우 스프링,print,PETG,1,8.2,2.0,8.2,M4-05_cup_S2.step M4-05_cup_S2.stl
-M5-01,cam,M5 디텐트 카세트,mach/sheet,6061 17t→16.5,1,36.9,16.5,53.1,M5-01_cam.step M5-01_cam_16.5t.dxf
+M5-01,cam,M5 디텐트 카세트,mach/sheet,6061 17t→16.5,1,36.9,16.5,53.2,M5-01_cam.step M5-01_cam_16.5t.dxf
 M5-02,cassette,M5 디텐트 카세트,mach/block,6061 블록,1,56.0,28.9,51.3,M5-02_cassette.step
 M5-03,arm_plate,M5 디텐트 카세트,mach/sheet,6061 3t,2,75.5,3.0,9.0,M5-03_arm_plate.step M5-03_arm_plate_3t_x2.dxf
 M5-04,rollers,M5 디텐트 카세트,buy,625ZZ ×3,1,16.0,15.6,16.0,M5-04_rollers.step

@@ -4,7 +4,10 @@ name: 디텐트 카세트 프레임
 material: Al 6061-T6
 stock: 블록 60×32×55
 process: CNC 3축 2~3면
-rev: v0.5
+rev: B
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3
   - 블랙 아노다이징 Type II — Ø5 H8 피벗 구멍 마스킹
@@ -18,7 +21,7 @@ datums:
   A: {view: front, at: [-36, -48, -66], dx: 0, dy: -30}
 gdt:
   - {view: front, at: [-28.2, -49.2, -43.2], symbol: parallelism, tol: "0.02", datums: [A], dx: 18, dy: 12}
-  - {view: front, at: [-70, -48, -66], symbol: flatness, tol: "0.03", dx: -30, dy: -30}
+  - {view: front, at: [-70, -48, -66], symbol: flatness, tol: "0.03", dx: -22, dy: -16}
 notes:
   - "Ø5 H8 피벗 (양쪽 기둥 동시 가공): ISO 7379 Ø5 숄더볼트 — 암 회전축"
   - "M6 탭 (스프링 예압 볼트), 피벗에서 35 = 스프링 팔 길이 (cam.py A_SPR)"

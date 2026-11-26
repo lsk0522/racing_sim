@@ -4,7 +4,10 @@ name: 허브 (레버 홀더)
 material: Al 6061-T6
 stock: 블록 26×18×36
 process: CNC 3축 2면
-rev: v0.5
+rev: B
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.2
   - 비드 블라스트 #150, 투명 아노다이징 Type II — Ø8 보어 마스킹

@@ -4,7 +4,10 @@ name: 시퀀셜 잠금 암
 material: Al 6061-T6
 stock: 10t 판재 55×30
 process: CNC 3축 2면
-rev: v0.5
+rev: B
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
 finish:
   - 바리 제거, 포켓 윗모서리 R0.3
   - 하드 아노다이징 Type III 25µm (스톱 하중·마모) — 피벗 구멍 마스킹

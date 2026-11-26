@@ -8,6 +8,7 @@ import numpy as np
 from build123d import *
 from shapely.geometry import Point as SPoint, Polygon as SPolygon
 from shapely.ops import unary_union
+import smooth2d
 import cam as camgen
 
 Z_BASE = -66.0
@@ -43,15 +44,26 @@ def cyl_z(r, z0, z1, x=0.0, y=0.0):
     return Pos(x, y, (z0 + z1) / 2) * Cylinder(r, z1 - z0)
 
 
+SMOOTH = True        # 2D 선분 묶음 → 직선·원호·스플라인 (매끄러운 STEP). False = 예전 다각형
+
+
+def _face2d(pts):
+    if SMOOTH:
+        f = smooth2d.smooth_face(pts)
+        if f is not None:
+            return f
+    return Polygon(*pts, align=None)
+
+
 def xz_prism(pts, y0, y1):
     """XZ polygon → solid over the Y range y0..y1."""
-    f = Plane.XZ * Polygon(*pts, align=None)
+    f = Plane.XZ * _face2d(pts)
     p = extrude(f, amount=y1 - y0)          # direction depends on point winding → realigned by bbox
     return p.moved(Location((0, y0 - p.bounding_box().min.Y, 0)))
 
 
 def xy_prism(pts, z0, z1):
-    f = Plane.XY * Polygon(*pts, align=None)
+    f = Plane.XY * _face2d(pts)
     p = extrude(f, amount=z1 - z0)
     return p.moved(Location((0, 0, z0 - p.bounding_box().min.Z)))
 

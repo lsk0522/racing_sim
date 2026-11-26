@@ -4,11 +4,14 @@
 ```
 vX.Y/
   specs/*.yaml   ← 원본. 치수·공차·기하공차·후처리를 여기에 적는다
-  *.dxf          A3 도면 (CAD에서 열기, 글꼴 맑은 고딕)
+  *.dxf          A4 세로 도면 (CAD에서 열기, 글꼴 맑은 고딕, 원·원호는 CIRCLE/ARC 실제 곡선)
   pdf/ png/      미리보기
   INDEX.md       도면 목록
 ```
-재생성: `cd shifter/src && python3 make_drawings.py --version v0.5` (한 장만: 뒤에 YAML 경로)
+재생성: `cd shifter/src && python3 export.py && python3 make_drawings.py --version v0.5` (한 장만: 뒤에 YAML 경로)
+
+형상은 `CAD/vX.Y/mach/…/<품번>_<부품>.step`(export.py 산출물)을 읽어 은선 처리한다 — 메시(STL)는 쓰지 않는다.
+날카로운 모서리와 윤곽선만 그리고, 접선(매끄럽게 이어지는) 모서리·이음선은 그리지 않는다 (ISO 128).
 
 ## 적용 규격
 | 항목 | 규격 | 도면 표기 |
@@ -19,13 +22,20 @@ vX.Y/
 | 기하공차 | ISO 1101, 독립의 원칙 ISO 8015 | 공차 기입틀 + 데이텀 |
 | 모서리 | ISO 13715 | 주기 2 |
 | 표면 거칠기 | ISO 21920 (기호 ISO 1302) | 주기 3 + 개별 기호 |
-| 투상 / 척도 | 3각법 / ISO 5455 (5:1, 2:1, 1:1, 1:2 …) | 표제란 |
+| 투상 / 척도 | 3각법 ISO 128-30 · 기호 ISO 5456-2 / ISO 5455 (5:1, 2:1, 1:1, 1:2 …) | 추가 정보란 |
+| 용지·윤곽 | **ISO 5457 A4 세로** (철 여백 20, 나머지 10, 중심 마크, 구역 1~4 × A~F) | — |
+| 표제란 | **ISO 7200** (폭 180, 오른쪽 아래): 책임 부서·기술 참조·문서 종류·문서 상태·작성자·승인자·법적 소유자·제목·부제·식별 번호·개정·발행일·언어·시트 | 추가 정보란: 재질·소재·질량·척도·투상법·일반 공차·ISO 8015·단위 |
+| 선 | ISO 128-20 선 그룹 0.35 (외형선 0.35, 가는 선 0.18, 숨은선 02, 중심선 04), 윤곽선 0.7 | — |
+| 문자 | ISO 3098 (치수·주기 2.5, 제목 5) | — |
+| 개정 이력 | 오른쪽 위 표 (개정·내용·날짜·작성) | `revisions` |
 
 ## YAML 키
 | 키 | 내용 |
 |---|---|
 | `part`, `part_no`, `name`, `material`, `stock`, `process`, `rev` | 표제란. `part`는 `src/make_drawings.py`의 형상 이름 |
-| `views`, `hidden_views`, `scale` | 투상도 (기본 front/top/right), 숨은선 표시할 투상도 (기본 front), 척도 (없으면 자동) |
+| `views`, `hidden_views`, `scale` | 투상도 (기본 front/top/right), 숨은선 표시할 투상도 (기본 front), 척도 (없으면 ISO 5455에서 A4에 맞는 가장 큰 값) |
+| `source` | (선택) 다른 STEP 사용 — `shifter/` 기준 경로. 없으면 `CAD/<버전>/`에서 품번으로 찾음 |
+| `dept`, `approved`, `status`, `doc_type` | (선택) 표제란 책임 부서·승인자·문서 상태·문서 종류 |
 | `general_tolerance`, `edges`, `roughness_default` | 기본 ISO 2768-mK / ISO 13715 −0.3·+0.3 / Ra 3.2 |
 | `finish` | 후처리 순서 목록 (바리 제거, 블라스트, 아노다이징 종류·두께·마스킹 …) |
 | `dims` | `type: linear` (`p1`, `p2`, `dir: h/v`, `side: above/below/left/right`) · `type: diameter/radius` (`center`, `r`, `angle`) |

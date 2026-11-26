@@ -1,32 +1,28 @@
 # LSK H/SEQ Shifter — author: Sunggwan
 """도면 생성: docs/dxf/<VERSION>/specs/*.yaml → docs/dxf/<VERSION>/ 에 DXF, pdf/, png/ + INDEX.md
 사용: cd shifter/src && python3 make_drawings.py            (전체)
-      python3 make_drawings.py ../docs/dxf/v0.5/specs/M5-01_cam.yaml   (한 장만)"""
+      python3 make_drawings.py ../docs/dxf/v0.5/specs/M5-01_cam.yaml   (한 장만)
+형상은 export.py가 만든 STEP(CAD/<버전>/mach/…)을 읽는다 → 먼저 export.py 실행."""
 import sys, os, glob, argparse, datetime
 import yaml
-import cad, drawings
+from build123d import import_step
+import drawings
 
-camH = None
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def shape_of(part):
-    global camH
-    if part == "cam":
-        camH = camH or cad.camgen.build_cam(cad.camgen.H_PROFILE)
-        return cad.make_cam(camH)
-    return {
-        "base": lambda: cad.make_base()[0],
-        "tower_negY": lambda: cad.make_tower(-1),
-        "tower_posY": lambda: cad.make_tower(+1),
-        "gate": lambda: cad.make_gate()[0],
-        "cradle": cad.make_cradle,
-        "hub": cad.make_hub,
-        "cassette": cad.make_cassette,
-        "arm_plate": lambda: cad.plate_xz(cad.arm2d(), cad.YC + 8.1, cad.YC + 11.1),
-        "seq_lock": lambda: cad.make_seq_lock(False),
-        "eccentric": lambda: cad.cyl_x(5.5, -2, 6, y=cad.SHAFT_Y, z=cad.SHAFT_Z - 3)
-                             - cad.cyl_x(2.5, -3, 7, y=cad.SHAFT_Y, z=cad.SHAFT_Z),
-    }[part]()
+def shape_of(spec, version):
+    """기본: CAD/<버전>/mach/**/<품번>_<부품>.step (export.py 산출물, 매끄러운 B-rep).
+    YAML에 source: 를 주면 그 STEP을 사용 (레포 shifter/ 기준 상대 경로)."""
+    if spec.get("source"):
+        fn = os.path.join(HERE, "..", spec["source"])
+    else:
+        pno = spec["part_no"].replace("LSK-SH-", "")
+        hits = glob.glob(os.path.join(HERE, "..", "CAD", version, "**", f"{pno}_{spec['part']}.step"), recursive=True)
+        if not hits:
+            raise FileNotFoundError(f"{pno}_{spec['part']}.step 없음 — 먼저 export.py 실행")
+        fn = hits[0]
+    return import_step(fn), os.path.relpath(fn, os.path.join(HERE, ".."))
 
 
 if __name__ == "__main__":
@@ -44,7 +40,8 @@ if __name__ == "__main__":
     index = []
     for fn in specs:
         spec = yaml.safe_load(open(fn, encoding="utf-8"))
-        shp = shape_of(spec["part"])
+        shp, src = shape_of(spec, a.version)
+        spec.setdefault("tech_ref", os.path.basename(src))
         dxf, scale = drawings.make_drawing(spec, shp, a.out, rev_date=a.date)
         stem = os.path.basename(dxf)[:-4]
         drawings.preview(dxf, out_png=os.path.join(a.out, "png", stem + ".png"),

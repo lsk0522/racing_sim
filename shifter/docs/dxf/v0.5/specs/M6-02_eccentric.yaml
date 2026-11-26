@@ -4,7 +4,10 @@ name: 모드 편심 캠
 material: Al 6061-T6
 stock: Ø14 봉 또는 10t 판재
 process: CNC (판재 윤곽) / 선반
-rev: v0.5
+rev: B
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
 finish:
   - 바리 제거, 외경 모서리 C0.3
   - 하드 아노다이징 Type III 25µm 또는 무처리 + 그리스

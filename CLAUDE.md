@@ -11,6 +11,9 @@
   - `CAD/vX.Y/mach/sheet` 판재 가공 · `mach/block` 블록·봉 가공 · `print` 출력 · `buy` 구매품 · `assembly` 조립
   - 파일 이름은 `품번_부품` (예: `M2-01_tower_negY.step`). 새 부품은 `export.py`의 `CATALOG`에 품번·폴더를 등록.
 - 도면은 `shifter/docs/dxf/vX.Y/specs/*.yaml`이 원본 (치수·공차·기하공차·후처리). 수정 후 `src/make_drawings.py`로 DXF·PDF·PNG 재생성.
+  - 도면 형상은 `export.py`가 만든 **STEP**에서 은선 처리한다 (STL·메시 금지). 순서: `check.py` → `export.py` → `make_drawings.py`.
+  - 용지는 **A4 세로가 기본** (ISO 5457 윤곽, ISO 7200 표제란, ISO 128 선, ISO 3098 문자).
+  - 2D 형상을 돌출할 때는 `cad.xz_prism`/`xy_prism`(→ `smooth2d`)을 써서 직선·원호·스플라인 면을 만든다. 각진 다각형 면을 STEP에 남기지 않는다.
   - 일반 공차 ISO 2768-mK, 끼워맞춤 ISO 286, 기하공차 ISO 1101, 모서리 ISO 13715, 거칠기 ISO 21920, 3각법, 척도 ISO 5455.
   - 도면을 고치면 해당 YAML의 `rev`/`revisions`도 올린다.
 - 펌웨어 수정 후 `test/test_logic.cpp` 단위 테스트와 `pio run` 빌드를 둘 다 통과시킨다.
