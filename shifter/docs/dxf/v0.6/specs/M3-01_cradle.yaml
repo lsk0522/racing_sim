@@ -4,12 +4,13 @@ name: 크래들 (짐벌 프레임)
 material: Al 6061-T6
 stock: 블록 40×58×36
 process: CNC 3축 3면 (보어 양면 동일 셋업 권장)
-rev: D
+rev: E
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
   - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
-  - {rev: D, date: 2026-11-27, desc: "주서 블라스트 입도 누락 수정"}
+  - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
+  - {rev: E, date: 2026-11-27, desc: "주서 블라스트 입도 누락 수정"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3, 외곽 수직 모서리 R1
   - "비드 블라스트 #150"

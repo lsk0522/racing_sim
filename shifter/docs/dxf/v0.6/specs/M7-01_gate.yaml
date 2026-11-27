@@ -6,12 +6,13 @@ stock: 4t 판재 75×115
 process: CNC 2.5D (판재) + 각인 + 아래면 막힌 탭
 views: [front, top]
 hidden_views: [top]
-rev: D
+rev: E
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
   - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
-  - {rev: D, date: 2026-11-27, desc: "v0.6: 4t 68×110.5, 부트 탭"}
+  - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
+  - {rev: E, date: 2026-11-27, desc: "v0.6: 4t 68×110.5, 부트 탭"}
 roughness_default: Ra 1.6
 finish:
   - 게이트 슬롯 모서리 C0.6 (윗면), 슬롯 안쪽 R0.3 (레버 닿는 면), 외곽 C0.6, 그 외 ISO 13715 −0.2
@@ -36,9 +37,10 @@ datums:
 gdt:
   - {view: top, at: [4.9, 7.5, 57], symbol: profile_line, tol: "0.05", datums: [A, B], dx: 30, dy: 32}
   - {view: front, at: [10, 0, 57], symbol: flatness, tol: "0.05", dx: 8, dy: 8}
+callouts:
+  - {view: top, at: [-27.8, -51.8, 57], text: ["4-Ø3.4 관통", "90° 접시 Ø6.3 (M3)"], dx: -12, dy: -22}
 notes:
   - "게이트 개구부 윤곽은 DXF(1:1) 기준 — 레버 Ø8 경사 통과 형상 (4t 기준 재계산), 슬롯 중심 Y 15 / 0 / −15 / −30"
-  - "4×Ø3.4 관통 + 윗면 90° 접시 Ø6.3 (M3 접시머리 → 타워 윗면 탭), 머리는 윗면에서 0.1 들어감"
   - "아래면 4×M3 막힌 탭 (기초 구멍 Ø2.5 깊이 3, 유효 나사 2.5) — 부트 프레임 고정, X ±24 / Y −41, 26"
   - "볼트 Y 위치(−53 / 31)는 타워 위치로 고정 — 외곽 가장자리까지 10.5 / 16 (의도된 비대칭)"
 change: "3t → 4t, 외곽 68×110.5, 볼트 X −29/28, 부트 프레임 탭 ×4"

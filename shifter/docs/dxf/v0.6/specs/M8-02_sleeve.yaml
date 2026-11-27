@@ -25,6 +25,8 @@ datums:
 gdt:
   - {view: front, at: [6, 0, 96], symbol: coaxiality, tol: "Ø0.03", datums: [A], dx: 14, dy: 6}
   - {view: front, at: [6, 0, 76], symbol: runout, tol: "0.03", datums: [A], dx: 14, dy: -8}
+callouts:
+  - {view: front, at: [-6, 0, 88], text: ["M3 탭 (뒤쪽 −X)", "무두볼트 M3×4"], dx: -22, dy: 10}
 notes:
   - "재질 SUS303 권장 (Al 6061-T6 가능 — 나사부 마모 주의)"
   - "보어 Ø8 N7 관통 — 레버 Ø8 h6에 가벼운 압입 + 고정제 (록타이트 638 등), 레버 위치 72~108"
