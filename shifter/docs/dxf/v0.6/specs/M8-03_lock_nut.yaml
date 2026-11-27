@@ -6,13 +6,15 @@ stock: Ø20 봉 15
 process: 선반 (원뿔·나사) + 밀링 (렌치 면 2면)
 views: [front, top]
 hidden_views: [front]
-rev: A
+rev: B
 revisions:
   - {rev: A, date: 2026-11-27, desc: "v0.6 최초 발행"}
+  - {rev: B, date: 2026-11-27, desc: "아노다이징 제외 (무처리·블라스트)"}
 roughness_default: Ra 0.8
+remarks: 무처리
 finish:
   - 원뿔면 선삭 Ra 0.8 (가공면 노출, 밝게), 원형 모서리 C0.4
-  - 투명 아노다이징 Type II 8µm (가공면 유지) 또는 무처리
+  - 표면처리 없음 (가공면 유지)
 dims:
   - {view: front, type: linear, p1: [-7.2, 0, 85], p2: [7.2, 0, 85], dir: h, side: below, dia: true, tol: "±0.1"}
   - {view: front, type: linear, p1: [-9.8, 0, 94], p2: [9.8, 0, 94], dir: h, side: above, dia: true, tol: "±0.1"}

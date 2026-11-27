@@ -12,6 +12,7 @@ IGNORE = {frozenset(p) for p in [
     ("plunger_S1_L", "tail_bolt"), ("plunger_S1_R", "tail_bolt"), ("plunger_S2", "tail_bolt"),
     ("hollow_pin", "cradle"), ("hollow_pin", "pin_collar"),
     ("lever_bar", "sleeve"), ("sleeve", "lock_nut"), ("sleeve", "knob"), ("lock_nut", "knob"), ("lever_bar", "boot_collar"),
+    ("clamp_bolt", "clamp_jaw"), ("clamp_bolt", "clamp_knob"),          # M10 thread in the jaw tap / head in the knob
 ]}
 
 
@@ -62,6 +63,16 @@ if __name__ == "__main__":
     poses += [(-7.8, 0, True), (-4, 0, True), (0, 0, True), (4, 0, True), (7.8, 0, True)]
     poses += [(th, ph, False) for ph in cad.PHI.values() for th in (-11, -3, 3, 11)]
     bad = 0
+    for t_desk in (15.0, cad.DESK_T, 38.0):              # desk clamp: desk slab vs every static part
+        desk = cad.desk_ghost(t_desk)
+        P = {**st, "clamp_pad": cad.make_clamp_pad(t_desk), "clamp_bolt": cad.make_clamp_bolt(t_desk),
+             "clamp_knob": cad.make_clamp_knob(t_desk)}
+        hits = [(k, round((desk & v).volume, 1)) for k, v in P.items()
+                if desk.bounding_box().overlaps(v.bounding_box()) and (desk & v).volume > 1.0]
+        hits += [(a, b) for a, b in (("clamp_pad", "clamp_jaw"), ("clamp_knob", "clamp_jaw"), ("clamp_bolt", "clamp_spine"))
+                 if (P[a] & P[b]).volume > 1.0]
+        print(f"desk {t_desk:4.1f} mm → {hits if hits else 'OK'}", flush=True)
+        bad += bool(hits)
     for p in poses:
         bad += bool(check(*p))
     print(f"{len(poses)} poses, {bad} with interference, {time.time()-t0:.0f}s")

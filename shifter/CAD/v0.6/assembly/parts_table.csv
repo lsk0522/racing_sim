@@ -37,3 +37,9 @@ M10-04,cover_rear,M10 외장,print,ABS/PETG (무광),1,48.8,112.5,123.0,M10-04_c
 M10-05,window,M10 외장,buy,스모크 아크릴 1.2t,1,45.6,1.2,27.6,M10-05_window.step
 M11-01,boot_frame,M11 방진 부트,print,PETG,1,50.8,70.0,3.0,M11-01_boot_frame.step M11-01_boot_frame.stl
 M11-02,boot_collar,M11 방진 부트,print,PETG,1,14.0,14.0,6.0,M11-02_boot_collar.step M11-02_boot_collar.stl
+M12-01,clamp_plate,M12 책상 클램프,mach/sheet,6061 6t,1,151.0,124.5,6.0,M12-01_clamp_plate.step M12-01_clamp_plate_6t.dxf
+M12-02,clamp_spine,M12 책상 클램프,mach/sheet,6061 12t,1,12.0,100.0,48.0,M12-02_clamp_spine.step
+M12-03,clamp_jaw,M12 책상 클램프,mach/sheet,6061 12t,1,60.0,100.0,12.0,M12-03_clamp_jaw.step
+M12-04,clamp_pad,M12 책상 클램프,print,PETG,1,44.0,36.0,6.0,M12-04_clamp_pad.step M12-04_clamp_pad.stl
+M12-05,clamp_knob,M12 책상 클램프,print,PETG,1,42.7,44.3,11.5,M12-05_clamp_knob.step M12-05_clamp_knob.stl
+M12-06,clamp_bolt,M12 책상 클램프,buy,M10×50 육각볼트,1,19.6,17.0,56.5,M12-06_clamp_bolt.step

@@ -1205,6 +1205,119 @@ def make_bottom_cover():
     return c
 
 
+# ---------- [M12] desk clamp (Desker black wood desk, top ≈ 28 mm, fits 15..38 mm) ----------
+# +X (mode-knob face) faces the driver → the desk front edge is on the +X side.
+CL_PT = 6.0                          # top plate 6t (under the bottom cover)
+CL_ST = 12.0                         # spine / jaw 12t
+CL_Z0 = Z_BASE - BASE_T - 2.0        # −76: underside of the printed bottom cover = plate top
+CL_ZP = CL_Z0 - CL_PT                # −82: plate bottom (silicone strips stick out 1.0 below)
+SIL = 1.0                            # silicone 2t in 1.0 pockets → 1.0 proud
+DESK_EDGE_X = 51.0                   # desk front edge (spine inner face 52 + silicone 1.0)
+CL_OPEN = 48.0                       # plate bottom → jaw top
+CL_ZJ = CL_ZP - CL_OPEN              # −130: jaw top
+CL_X = (-87.0, 64.0)                 # plate X (spine 52..64 under the front lip)
+CL_SX = (52.0, 64.0)
+CL_JX = (4.0, 64.0)                  # jaw reaches 47 mm under the desk
+CL_Y = (Y_NEG_OUT - 3.0, Y_POS_OUT + 3.0)
+CL_SY = (Y_MID - 50.0, Y_MID + 50.0)
+CL_M5 = [(58.0, Y_MID + d) for d in (-38.0, 0.0, 38.0)]
+CL_SCREW = (24.0, Y_MID)             # M10 clamp screw, 27 mm in from the desk edge
+CL_PAD = (44.0, 36.0, 6.0)           # printed pressure pad (+ silicone 2t on top)
+DESK_T = 28.0                        # Desker top thickness (assembly pose)
+DESK_TOP = CL_ZP - SIL
+
+
+def clamp_plate2d():
+    return sbox(CL_X[0], CL_Y[0], CL_X[1], CL_Y[1]).buffer(-4.0).buffer(4.0, resolution=16)
+
+
+def make_clamp_plate():
+    p = plate_xy(clamp_plate2d(), CL_ZP, CL_Z0, ch=0.5)
+    for x, y in M6_HOLES:                                           # M6 DIN7991 from below → base blind taps
+        p -= _csk(x, y, CL_ZP, "z", -1, d_hole=6.6, d_head=12.4)
+    for x, y in CL_M5:                                              # M5 DIN7991 from above → spine top edge
+        p -= _csk(x, y, CL_Z0, "z", 1, d_hole=5.5, d_head=10.4)
+    for y0, y1 in ((CL_Y[0] + 4, CL_Y[0] + 22), (CL_Y[1] - 22, CL_Y[1] - 4)):
+        p -= box(CL_X[0] + 6, CL_SX[0] - 4, y0, y1, CL_ZP - 1, CL_ZP + SIL)      # silicone pockets (desk top)
+    return p
+
+
+def make_clamp_spine():
+    s = box(CL_SX[0], CL_SX[1], CL_SY[0], CL_SY[1], CL_ZJ, CL_ZP)
+    for x, y in CL_M5:
+        s -= cyl_z(2.1, CL_ZP - 12, CL_ZP + 1, x=x, y=y)            # M5 tap top edge, depth 12
+        s -= cyl_z(2.1, CL_ZJ - 1, CL_ZJ + 12, x=x, y=y)            # M5 tap bottom edge
+    s -= box(CL_SX[0] - 1, CL_SX[0] + SIL, CL_SY[0] + 6, CL_SY[1] - 6, CL_ZP - 30, CL_ZP - 6)   # silicone (desk edge)
+    return _chamfer_loop(s, 0.5, (1, 0, 0))
+
+
+def _chamfer_loop(s, size, normal):
+    """Chamfer only the outer boundary of the planar face(s) whose normal ≈ `normal`."""
+    try:
+        es = []
+        for f in s.faces():
+            if f.geom_type == GeomType.PLANE and (f.normal_at() - Vector(*normal)).length < 1e-3:
+                es += f.outer_wire().edges()
+        return s.chamfer(size, None, es)
+    except Exception as e:
+        print("chamfer skipped:", e)
+        return s
+
+
+def make_clamp_jaw():
+    j = box(CL_JX[0], CL_JX[1], CL_SY[0], CL_SY[1], CL_ZJ - CL_ST, CL_ZJ)
+    for x, y in CL_M5:
+        j -= _csk(x, y, CL_ZJ - CL_ST, "z", -1, d_hole=5.5, d_head=10.4)
+    j -= cyl_z(4.25, CL_ZJ - CL_ST - 1, CL_ZJ + 1, x=CL_SCREW[0], y=CL_SCREW[1])   # M10 tap through
+    return _chamfer_loop(_chamfer_loop(j, 0.5, (0, 0, -1)), 0.5, (0, 0, 1))
+
+
+def clamp_pad_z(desk_t=DESK_T):
+    top = DESK_TOP - desk_t - SIL * 2                               # silicone 2t between pad and desk
+    return top - CL_PAD[2], top
+
+
+def make_clamp_pad(desk_t=DESK_T):
+    z0, z1 = clamp_pad_z(desk_t)
+    x, y = CL_SCREW
+    p = xy_prism(shapely_to_pts(sbox(x - CL_PAD[0] / 2, y - CL_PAD[1] / 2, x + CL_PAD[0] / 2, y + CL_PAD[1] / 2)
+                                .buffer(-4).buffer(4, resolution=16), 0.01), z0, z1)
+    p -= cyl_z(5.4, z0 - 1, z0 + 3.5, x=x, y=y)                     # bolt-tip socket Ø10.8 × 3.5 (lets the pad tilt)
+    return p
+
+
+def make_clamp_bolt(desk_t=DESK_T):
+    """M10×50 hex bolt (buy) — tip 3 mm inside the pad socket."""
+    z0, _ = clamp_pad_z(desk_t)
+    tip = z0 + 3.0
+    x, y = CL_SCREW
+    b = cyl_z(4.9, tip - 50.0, tip, x=x, y=y)
+    b += Pos(x, y, tip - 50.0 - 6.5) * extrude(RegularPolygon(8.5 / math.cos(math.pi / 6), 6), amount=6.5)
+    return b
+
+
+def make_clamp_knob(desk_t=DESK_T):
+    """Printed star knob, M10 hex head (17 AF) pressed in + epoxy."""
+    z0, _ = clamp_pad_z(desk_t)
+    zh = z0 + 3.0 - 50.0                                            # bolt-head underside
+    x, y = CL_SCREW
+    lobes = SPoint(0, 0).buffer(13.0, 32)
+    for k in range(5):
+        a = 2 * math.pi * k / 5
+        lobes = lobes.union(SPoint(17 * math.cos(a), 17 * math.sin(a)).buffer(6.0, 24))
+    lobes = lobes.buffer(-2.0).buffer(2.0, resolution=16)
+    pts = [(px + x, py + y) for px, py in shapely_to_pts(lobes, 0.01)]
+    k = xy_prism(pts, zh - 6.5, zh + 5.0)                          # bottom flush with the bolt head
+    k -= Pos(x, y, zh - 7.5) * extrude(RegularPolygon(8.6 / math.cos(math.pi / 6), 6), amount=7.5)
+    k -= cyl_z(5.2, zh - 1, zh + 5, x=x, y=y)
+    return k
+
+
+def desk_ghost(desk_t=DESK_T):
+    """Reference only (check.py): the desk top slab."""
+    return box(DESK_EDGE_X - 200, DESK_EDGE_X, CL_Y[0] - 20, CL_Y[1] + 20, DESK_TOP - desk_t, DESK_TOP)
+
+
 _build_all_v05 = build_all
 
 
@@ -1220,6 +1333,9 @@ def build_all():
     st["cover_front"], st["cover_rear"] = make_cover(True), make_cover(False)
     st["window"] = make_window()
     st["boot_frame"] = make_boot_frame()
+    st["clamp_plate"], st["clamp_spine"], st["clamp_jaw"] = make_clamp_plate(), make_clamp_spine(), make_clamp_jaw()
+    st["clamp_pad"], st["clamp_bolt"], st["clamp_knob"] = make_clamp_pad(), make_clamp_bolt(), make_clamp_knob()
+    plates2d["clamp_plate"] = clamp_plate2d()
     heads = Part()
     for (x, y) in GATE_BOLTS:
         heads += _csk_head(x, y, Z_TOP, "z", 1)

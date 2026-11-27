@@ -1,0 +1,30 @@
+part: clamp_spine
+part_no: LSK-SH-M12-02
+name: 책상 클램프 기둥 12t
+material: Al 6061-T6
+stock: 12t 판재 48×100
+process: CNC 3축 3면 (윗·아랫 모서리 탭 + 안쪽 포켓)
+views: [front, top, right]
+hidden_views: [right]
+rev: A
+revisions:
+  - {rev: A, date: 2026-11-27, desc: "최초 발행 — 데스커 책상 클램프 (상판 15~38mm)"}
+roughness_default: Ra 3.2
+remarks: 무처리 · 블라스트
+finish:
+  - 바리 제거, 바깥면(+X) 모서리 C0.5, 그 외 ISO 13715 −0.2
+  - "비드 블라스트 #150 (선택) — 표면처리 없음"
+dims:
+  - {view: top, type: linear, p1: [52, -58.25, -82], p2: [58, -46.25, -82], dir: h, side: below, tol: "±0.1"}
+  - {view: top, type: linear, p1: [64, -58.25, -82], p2: [58, -46.25, -82], dir: v, side: right, tol: "±0.1"}
+  - {view: top, type: linear, p1: [64, -58.25, -82], p2: [58, -8.25, -82], dir: v, side: right, tol: "±0.1"}
+  - {view: top, type: linear, p1: [64, -58.25, -82], p2: [58, 29.75, -82], dir: v, side: right, tol: "±0.1"}
+  - {view: right, type: linear, p1: [52, -52.25, -112], p2: [52, 35.75, -112], dir: h, side: below, tol: "±0.2"}
+  - {view: right, type: linear, p1: [52, 41.75, -82], p2: [52, 35.75, -88], dir: v, side: right, tol: "±0.2"}
+  - {view: right, type: linear, p1: [52, 41.75, -82], p2: [52, 35.75, -112], dir: v, side: right, tol: "±0.2"}
+  - {view: front, type: linear, p1: [64, 0, -130], p2: [64, 0, -82], dir: v, side: right, tol: "±0.05"}
+callouts:
+  - {view: top, at: [59.48, 31.23, -82], text: ["3-M5 탭 깊이 12", "윗면·아랫면 동일 (6곳)"], dx: 30, dy: 10}
+notes:
+  - "높이 48 = 클램프 벌림 — 윗면은 아랫면 기준 평행도 0.05 (벌어지면 책상을 비스듬히 문다)"
+  - "−X면(책상 모서리 쪽) 실리콘 포켓 88×24 깊이 1.0 — 2t 실리콘 띠 접착"

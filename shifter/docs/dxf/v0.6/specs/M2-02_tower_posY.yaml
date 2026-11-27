@@ -4,7 +4,7 @@ name: +Y 타워
 material: Al 6061-T6
 stock: 6t 판재 125×125
 process: CNC 2.5D (판재)
-rev: F
+rev: G
 paper: A3
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
@@ -13,10 +13,12 @@ revisions:
   - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
   - {rev: E, date: 2026-11-27, desc: "v0.6: 윗변 53, 탭 −29/28"}
   - {rev: F, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
+  - {rev: G, date: 2026-11-27, desc: "아노다이징 제외 (무처리·블라스트)"}
+remarks: 무처리 · 블라스트
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3
   - "비드 블라스트 #120"
-  - 블랙 아노다이징 Type II 8~12µm (ISO 7599) — Ø16 보어 마스킹 (외장 안쪽, 보이지 않음)
+  - 블라스트 때 Ø16 보어 마스킹 (끼워맞춤 보호), 표면처리 없음
 dims:
   - {view: front, type: diameter, center: [0, 31, 0], r: 8.0, fit: M7, angle: 45}
   - {view: front, type: linear, p1: [0, 31, -66], p2: [0, 31, 0], dir: v, side: right, tol: "±0.02"}
