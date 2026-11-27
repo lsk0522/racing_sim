@@ -1,7 +1,7 @@
 # LSK H/SEQ Shifter v0.6 — CAD 산출물 (제작: Sunggwan)
 
 `src/export.py`로 생성 (직접 수정하지 말 것). 품번·소재·크기 전체 목록: [`assembly/parts_table.csv`](assembly/parts_table.csv)
-설계 문서: [`../../docs/DESIGN_v0.6.md`](../../docs/DESIGN_v0.6.md) · 렌더: [`images/`](images/)
+설계 문서: [`../../docs/history/DESIGN_v0.6.md`](../../docs/history/DESIGN_v0.6.md) · 렌더: [`images/`](images/)
 
 v0.5 대비 바뀐 부품: M1-01 베이스 · M1-02 바닥 커버 · M2-01/02 타워(윗변·탭) · M3-04 레버(길이 101) · M6-05 모드 노브 · M7-01 게이트 4t · M8-01 노브
 새 부품: M8-02 슬리브 · M8-03 록너트 · M10-01/02 사이드 패널 · M10-03/04 앞·뒤 커버 · M10-05 스모크 창 · M11-01 부트 프레임 · M11-02 레버 칼라 (M10-01 셸 삭제)

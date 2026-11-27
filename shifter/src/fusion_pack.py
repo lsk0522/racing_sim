@@ -55,9 +55,9 @@ if __name__ == "__main__":
     os.makedirs(out, exist_ok=True)
 
     st, cr, hb, fo, P2, camH = cad.build_all()
-    eccentric = cad.cyl_x(5.5, -2, 6, y=cad.SHAFT_Y, z=cad.SHAFT_Z - 3) - cad.cyl_x(2.55, -3, 7, y=cad.SHAFT_Y, z=cad.SHAFT_Z)
+    ex = cad.extra_parts()
     parts = {**st, **cr, **hb, **fo, "seq_lock": cad.make_seq_lock(False), "mode_knob": cad.make_mode_knob(False),
-             "eccentric": eccentric}
+             "eccentric": ex["eccentric"]}
     label = {name: (f"{pno}_{name}", folder.split("/")[0]) for pno, name, mod, folder, mat, ori, qty in CATALOG}
 
     children = []
@@ -76,6 +76,7 @@ if __name__ == "__main__":
 
     with open(os.path.join(out, "PARAMS.csv"), "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
-        w.writerow(["이름", "값 (mm·deg)", "설명 (cad.py 주석)"])
-        w.writerows(params_rows(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cad.py")))
+        w.writerow(["이름", "값 (mm·deg)", "설명 (cad_model.py 주석)"])
+        w.writerow(["# 주의", "", "v0.7: 아래 값은 cad_model.py 모델 좌표(좌우 반전 전). Fusion·조립 STEP은 Y가 뒤집힌 최종 좌표 → Y 값은 부호를 바꿔 읽기. PHI_M 대신 PHI(최종) 사용"])
+        w.writerows(params_rows(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cad_model.py")))
     print("saved", fn, len(children), "bodies")

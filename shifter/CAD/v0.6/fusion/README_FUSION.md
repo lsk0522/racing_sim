@@ -29,7 +29,7 @@ DIY 심레이싱 기어 쉬프터 **LSK H/SEQ Shifter v0.6**을 Fusion에서 이
 | 기어 각도 | `shifter/CAD/v0.6/assembly/geometry.json` |
 | 부품표·가격 | `shifter/CAD/v0.6/buy/BOM.csv` |
 | 가공 도면 18장 (PDF) | `shifter/docs/dxf/v0.6/pdf/` · 목록 `shifter/docs/dxf/v0.6/INDEX.md` |
-| 설계 문서 | `shifter/docs/DESIGN_v0.6.md` (외장·클램프), `shifter/docs/DESIGN_mechanism_v0.4.md` (내부 기구) |
+| 설계 문서 | `shifter/docs/history/DESIGN_v0.6.md` (외장·클램프), `shifter/docs/DESIGN_mechanism_v0.4.md` (내부 기구) |
 
 직접 받기: `https://github.com/lsk0522/racing_sim/raw/main/<위 경로>` (레포는 공개)
 

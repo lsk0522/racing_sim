@@ -13,6 +13,7 @@ IGNORE = {frozenset(p) for p in [
     ("hollow_pin", "cradle"), ("hollow_pin", "pin_collar"),
     ("lever_bar", "sleeve"), ("sleeve", "lock_nut"), ("sleeve", "knob"), ("lock_nut", "knob"), ("lever_bar", "boot_collar"),
     ("clamp_bolt", "clamp_jaw"), ("clamp_bolt", "clamp_knob"),          # M10 thread in the jaw tap / head in the knob
+    ("cam", "rollers"),                                                   # 구름 접촉 (롤러가 캠 면을 누르며 구름 — 0.4 mm³ 이하는 추종 곡선 보간 오차)
 ]}
 
 
@@ -39,7 +40,7 @@ def check(theta, phi, seq):
     P = parts_at(theta, phi, seq)
     names = list(P)
     bbs = {k: P[k].bounding_box() for k in names}
-    hits = []
+    hits, near = [], []
     for a, b in itertools.combinations(names, 2):
         if frozenset((a, b)) in IGNORE or not bbs[a].overlaps(bbs[b]):
             continue
@@ -49,7 +50,10 @@ def check(theta, phi, seq):
             v = -1
         if v > 1.0:
             hits.append((a, b, round(v, 1)))
-    print(f"θ={theta:+5.1f} φ={phi:+6.2f} {'SEQ' if seq else 'H  '} → {hits if hits else 'OK'}", flush=True)
+        elif v > 0.001:
+            near.append((a, b, round(v, 3)))           # 1 mm³ 이하 겹침도 표시 (11-27: 7-R 꼬리 볼트 0.01 mm³가 이 문턱에 숨어 있었음)
+    print(f"θ={theta:+5.1f} φ={phi:+6.2f} {'SEQ' if seq else 'H  '} → {hits if hits else 'OK'}"
+          + (f"   (작은 겹침 경고: {near})" if near else ""), flush=True)
     return hits
 
 

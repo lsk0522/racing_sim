@@ -1,0 +1,82 @@
+﻿이름,값 (mm·deg),설명 (cad_model.py 주석)
+# 주의,,v0.7: 아래 값은 cad_model.py 모델 좌표(좌우 반전 전). Fusion·조립 STEP은 Y가 뒤집힌 최종 좌표 → Y 값은 부호를 바꿔 읽기. PHI_M 대신 PHI(최종) 사용
+Z_BASE,-66,
+BASE_T,8,
+H_GATE,55,
+GATE_T,4,gate plate 4t (centre stays at H_GATE = 55 → z 53..57)
+LEVER_D,8,
+L_KNOB,110,
+GATE_Y,"(-63.5, 47)",
+THETA_STOP,14,14
+THETA_GATE_END,14.5,
+SEQ_STOP,8,SEQ lock pocket pitch limit
+YC,-34.75,roller/cam centre Y
+CAM_Y0,-43,
+CAM_Y1,-26.5,
+ARM_P,"(-30, -45)",
+SEQ_LIFT,6,
+LOCK_PIV,"(-30, -60)",
+SEQ_ANG,11.537,
+POCKET_X,13.2,"+X end (θ<0 side, tilted outward)"
+POCKET_XN,11,−X end (θ>0 side)
+SHAFT_Y,13.3,
+SHAFT_Z,-63.5,
+Z_TOP,57,57
+X_FRONT,46,
+X_REAR,-84,
+PANEL_T,3,
+Y_NEG_IN,-64.5,side-panel inner faces (clear pitch sensor cap −64 / spring cartridge +47)
+Y_POS_IN,48,side-panel inner faces (clear pitch sensor cap −64 / spring cartridge +47)
+Y_NEG_OUT,-67.5,
+Y_POS_OUT,51,
+Y_MID,-8.25,
+WALL,3,
+GAP,1,"shadow gap width/depth (metal–metal: gate–panel, base reveal)"
+GAP_PRINT,1.2,"printed-part boundary (cover edge rebate, gate–cover): print tolerance"
+GATE_X,"(-34, 34)",gate plate X range
+GATE_BOLTS,"[(-29, -53), (-29, 31), (28, -53), (28, 31)]",into tower top edges
+L_LEVER_TOP,104,Ø8 lever top (inside the Ø12 sleeve)
+S_SLEEVE,"(72, 108)",Ø12 sleeve (M12×1.25 on 85..108)
+S_NUT,"(85, 94)",taper lock-nut
+S_KNOB,"(94, 126)",knob (grip centre ≈ L_KNOB 110 → cam force curve unchanged)
+MK_X,"(41.5, 46)",mode knob X range (front face flush)
+DISH_R,22,scalloped finger dish around the mode knob
+DISH_D,6.5,scalloped finger dish around the mode knob
+LABEL_SIZE,5.5,front H / SEQ engraving (v0.6 rev: 4.2 / 0.4 was hard to read)
+LABEL_D,0.5,front H / SEQ engraving (v0.6 rev: 4.2 / 0.4 was hard to read)
+LABEL_Y,"(-7.5, 37)","label centres, outside the dish (dish edge on the face y −2.3 .. 28.9)"
+SLEEVE_SET_Z,88,"M3 set screw in the sleeve, hidden under the lock-nut (85..94)"
+X_TOP_REAR,-38.123,
+Z_REAR_KNEE,-10.773,
+X_TOP_FRONT,38,front facet parallel to the rear facet
+Z_FRONT_KNEE,45.182,
+PANEL_BOLTS,"[(40.5, -60.5), (40.5, 36), (-78.5, -60.5)]",5.5 mm from the edges (+ one on the rear facet)
+PANEL_BORDER,10,raised frame / recessed field / pivot medallion
+FIELD_D,0.8,raised frame / recessed field / pivot medallion
+ISLAND_R,15,raised frame / recessed field / pivot medallion
+PANEL_WIN,"(-20, 20, -52, -30, 3)","−Y window x0,x1,z0,z1,r"
+S2_ACCESS,"(0, -34)",+Y hex-key port for the 7·R preload screw
+COVER_BOSSES,"[(39, -40), (39, 32), (-77, -10), (-77, 39)]","vertical, M3 insert, screwed from under the base"
+BOOT_FRAME_BOLTS,"[(-24, -41), (-24, 26), (24, -41), (24, 26)]",
+BASE_R,2.5,
+RP_Y,"(-21.25, 4.75)",
+CORNER_SCREWS,"[(-79.5, -63), (41.5, -63), (-79.5, 46.5), (41.5, 46.5)]",
+M6_HOLES,"[(-60, -40), (-20, -40), (-20, 20), (20, 20)]",
+CL_PT,6,top plate 6t (under the bottom cover)
+CL_ST,12,spine / jaw 12t
+CL_Z0,-76,−76: underside of the printed bottom cover = plate top
+CL_ZP,-82,−82: plate bottom (silicone strips stick out 1.0 below)
+SIL,1,silicone 2t in 1.0 pockets → 1.0 proud
+DESK_EDGE_X,51,desk front edge (spine inner face 52 + silicone 1.0)
+CL_OPEN,48,plate bottom → jaw top
+CL_ZJ,-130,−130: jaw top
+CL_X,"(-87, 64)",plate X (spine 52..64 under the front lip)
+CL_SX,"(52, 64)",
+CL_JX,"(4, 64)",jaw reaches 47 mm under the desk
+CL_Y,"(-70.5, 54)",
+CL_SY,"(-58.25, 41.75)",
+CL_M5,"[(58, -46.25), (58, -8.25), (58, 29.75)]",
+CL_SCREW,"(24, -8.25)","M10 clamp screw, 27 mm in from the desk edge"
+CL_PAD,"(44, 36, 6)",printed pressure pad (+ silicone 2t on top)
+DESK_T,28,Desker top thickness (assembly pose)
+DESK_TOP,-83,

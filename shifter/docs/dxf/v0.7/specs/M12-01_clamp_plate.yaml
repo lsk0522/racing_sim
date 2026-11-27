@@ -1,0 +1,101 @@
+part: clamp_plate
+part_no: LSK-SH-M12-01
+name: 책상 클램프 윗판 6t
+material: Al 6061-T6
+stock: 6t 판재 151×125
+process: CNC 2.5D (판재) 양면
+views: [front, top]
+hidden_views: [top]
+rev: B
+paper: A3
+revisions:
+- {rev: A, date: 2026-11-27, desc: 최초 발행 — 데스커 책상 클램프 (상판 15~38mm)}
+- {rev: B, date: '2026-11-27', desc: v0.7 좌우 반전 (운전석 +X 표준 7+R)}
+roughness_default: Ra 3.2
+remarks: 무처리 · 블라스트
+finish: ['바리 제거, 외곽 C0.5, 그 외 ISO 13715 −0.2', '비드 블라스트 #150 (선택) — 표면처리 없음']
+dims:
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [-60, 40, -76]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [-20, 40, -76]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [20, -20, -76]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [58, 46.25, -76]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [-60, 40, -76]
+  dir: v
+  side: left
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [-87, 70.5, -76]
+  p2: [-20, -20, -76]
+  dir: v
+  side: left
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [64, 70.5, -76]
+  p2: [58, 46.25, -76]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [64, 70.5, -76]
+  p2: [58, 8.25, -76]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [64, 70.5, -76]
+  p2: [58, -29.75, -76]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [64, 0, -82]
+  p2: [64, 0, -76]
+  dir: v
+  side: right
+  tol: ±0.1
+callouts:
+- view: top
+  at: [-57.67, 37.67, -76]
+  text: [4-Ø6.6 관통, 아래면 90° 접시 Ø12.4 (M6)]
+  dx: 14
+  dy: -18
+- view: top
+  at: [61.68, -33.43, -76]
+  text: [3-Ø5.5 관통, 윗면 90° 접시 Ø10.4 (M5)]
+  dx: 14
+  dy: -30
+notes: ['M6 구멍 4곳 = 베이스(M1-01) 아래면 M6 탭과 같은 위치 (40 간격) — M6×12 접시머리, 아래에서 체결', '앞쪽 X 52~64 (폭 12) = 기둥(M12-02) 윗면에 얹힘 — M5×16 접시머리 3개, 위에서 체결', '아래면 실리콘 포켓 2곳 129×18 깊이 1.0 (Y 가장자리에서 4 안쪽, X −81~48) — 2t
+    실리콘 띠 접착, 책상 긁힘 방지', 윗면 평면도 0.1 (쉬프터 바닥 커버가 고르게 얹히도록), +X 방향(모드 노브 면)이 운전석 쪽 = 책상 앞 모서리]
+change: 좌우(Y) 반전

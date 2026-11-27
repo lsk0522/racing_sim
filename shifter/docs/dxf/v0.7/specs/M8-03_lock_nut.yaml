@@ -1,0 +1,75 @@
+part: lock_nut
+part_no: LSK-SH-M8-03
+name: 테이퍼 록너트
+material: Al 6061-T6
+stock: Ø20 봉 15
+process: 선반 (원뿔·나사) + 밀링 (렌치 면 2면)
+views: [front, top]
+hidden_views: [front]
+rev: C
+revisions:
+- {rev: A, date: 2026-11-27, desc: v0.6 최초 발행}
+- {rev: B, date: 2026-11-27, desc: 아노다이징 제외 (무처리·블라스트)}
+- {rev: C, date: '2026-11-27', desc: v0.7 좌우 반전 (운전석 +X 표준 7+R)}
+roughness_default: Ra 0.8
+remarks: 무처리
+finish: ['원뿔면 선삭 Ra 0.8 (가공면 노출, 밝게), 원형 모서리 C0.4', 표면처리 없음 (가공면 유지)]
+dims:
+- view: front
+  type: linear
+  p1: [-7.2, 0, 85]
+  p2: [7.2, 0, 85]
+  dir: h
+  side: below
+  dia: true
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [-9.8, 0, 94]
+  p2: [9.8, 0, 94]
+  dir: h
+  side: above
+  dia: true
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [9.8, 0, 85]
+  p2: [9.8, 0, 94]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [-9.8, 0, 85]
+  p2: [-9.8, 0, 87]
+  dir: v
+  side: left
+  tol: ±0.2
+- view: top
+  type: linear
+  p1: [-8.5, 0, 94]
+  p2: [8.5, 0, 94]
+  dir: h
+  side: below
+  tol: 0/-0.1
+- view: top
+  type: diameter
+  center: [0, 0, 94]
+  r: 6.0
+  text: M12×1.25-6H
+datums:
+  A:
+    view: front
+    at: [0, 0, 85]
+    dx: -14
+    dy: -9
+gdt:
+- view: front
+  at: [9.8, 0, 94]
+  symbol: perpendicularity
+  tol: '0.03'
+  datums: [A]
+  dx: 12
+  dy: 8
+notes: [M12×1.25-6H 관통 — 슬리브(M8-02)에 노브 아래에서 조여 노브 고정 (더블 너트), '렌치 면 17 (2면 평행), 아래 끝에서 2mm 위부터 — 아래 2mm는 원뿔 그대로', '아랫면 A 기준 (슬리브 쪽 접촉면 아님, 노브 쪽 윗면이 접촉면) — 윗면 직각도 0.03']
+change: 좌우(Y) 반전

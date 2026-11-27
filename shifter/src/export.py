@@ -8,16 +8,17 @@
     buy/          구매품 (참고용 STEP + BOM.csv)
     assembly/     전체 조립 STEP, 서브 조립, parts_table.csv, geometry.json
 
-사용: cd shifter/src && python3 export.py        (→ ../CAD/v0.6)
+사용: cd shifter/src && python3 export.py        (→ ../CAD/v0.7)
 """
 import os, json, shutil, csv, argparse
 from build123d import *
 import ezdxf, trimesh
 import cad
 
-VERSION = "v0.6"
+VERSION = "v0.7"
 
 # (품번, 부품, 모듈, 폴더, 소재/두께 또는 출력재, STL 출력 방향, 수량)
+# v0.7: 형상은 Y 반전 → X축 ±90° 출력 회전은 부호를 바꿔야 같은 면이 베드에 닿음 (−Y/+Y 이름이 바뀐 부품은 자동으로 맞음)
 CATALOG = [
     ("M1-01", "base",             "M1 베이스·전자부",   "mach/sheet", "6061 8t",       None, 1),
     ("M1-02", "bottom_cover",     "M1 베이스·전자부",   "print",      "PETG",          None, 1),
@@ -32,8 +33,8 @@ CATALOG = [
     ("M4-01", "cartridge",        "M4 좌우 스프링",     "print",      "PETG",          None, 1),
     ("M4-02", "plunger_S1_L",     "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, 90), 1),
     ("M4-03", "plunger_S1_R",     "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, -90), 1),
-    ("M4-04", "plunger_S2",       "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, -90), 1),
-    ("M4-05", "cup_S2",           "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, 90), 1),
+    ("M4-04", "plunger_S2",       "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, 90), 1),
+    ("M4-05", "cup_S2",           "M4 좌우 스프링",     "print",      "PETG",          (Axis.X, -90), 1),
     ("M5-01", "cam",              "M5 디텐트 카세트",   "mach/sheet", "6061 17t→16.5", None, 1),
     ("M5-02", "cassette",         "M5 디텐트 카세트",   "mach/block", "6061 블록",      None, 1),
     ("M5-03", "arm_plate",        "M5 디텐트 카세트",   "mach/sheet", "6061 3t",       None, 2),
@@ -47,13 +48,13 @@ CATALOG = [
     ("M8-01", "knob",             "M8 노브",           "print",      "ABS/PETG (또는 6061)", None, 1),
     ("M8-02", "sleeve",           "M8 노브",           "mach/block", "6061/SUS Ø20 봉", None, 1),
     ("M8-03", "lock_nut",         "M8 노브",           "mach/block", "6061/SUS Ø20 봉", None, 1),
-    ("M9-01", "pitch_sensor_cap", "M9 센서 캡",         "print",      "PETG",          (Axis.X, -90), 1),
+    ("M9-01", "pitch_sensor_cap", "M9 센서 캡",         "print",      "PETG",          (Axis.X, 90), 1),
     ("M9-02", "roll_sensor_cap",  "M9 센서 캡",         "print",      "PETG",          (Axis.Y, -90), 1),
-    ("M9-03", "pin_collar",       "M9 센서 캡",         "print",      "PETG",          (Axis.X, 90), 1),
+    ("M9-03", "pin_collar",       "M9 센서 캡",         "print",      "PETG",          (Axis.X, -90), 1),
     ("M10-01", "panel_negY",      "M10 외장",          "mach/sheet", "6061 3t",       None, 1),
     ("M10-02", "panel_posY",      "M10 외장",          "mach/sheet", "6061 3t",       None, 1),
-    ("M10-03", "cover_front",     "M10 외장",          "print",      "ABS/PETG (무광)", (Axis.X, 90), 1),
-    ("M10-04", "cover_rear",      "M10 외장",          "print",      "ABS/PETG (무광)", (Axis.X, 90), 1),
+    ("M10-03", "cover_front",     "M10 외장",          "print",      "ABS/PETG (무광)", (Axis.X, -90), 1),
+    ("M10-04", "cover_rear",      "M10 외장",          "print",      "ABS/PETG (무광)", (Axis.X, -90), 1),
     ("M10-05", "window",          "M10 외장",          "buy",        "스모크 아크릴 1.2t", None, 1),
     ("M11-01", "boot_frame",      "M11 방진 부트",      "print",      "PETG",          (Axis.X, 180), 1),
     ("M11-02", "boot_collar",     "M11 방진 부트",      "print",      "PETG",          None, 1),
@@ -94,10 +95,8 @@ if __name__ == "__main__":
         os.makedirs(f"{OUT}/{d}", exist_ok=True)
 
     st, cr, hb, fo, P2, camH = cad.build_all()
-    eccentric = cad.cyl_x(5.5, -2, 6, y=cad.SHAFT_Y, z=cad.SHAFT_Z - 3) - cad.cyl_x(2.55, -3, 7, y=cad.SHAFT_Y, z=cad.SHAFT_Z)
     parts = {**st, **cr, **hb, **fo, "seq_lock": cad.make_seq_lock(False), "mode_knob": cad.make_mode_knob(False),
-             "eccentric": eccentric,
-             "arm_plate": cad.plate_xz(cad.arm2d(), cad.YC + 8.1, cad.YC + 11.1)}
+             **cad.extra_parts()}                         # eccentric, arm_plate (최종 좌표)
 
     table = []
     for pno, name, mod, folder, mat, ori, qty in CATALOG:
