@@ -1,0 +1,19 @@
+Category,Item,Spec,Qty,Est. price (KRW),Notes
+Electronics,Arduino Pro Micro,ATmega32U4 5V/16MHz USB-C,1,7000,Select Leonardo in the IDE
+Electronics,AS5600 magnetic encoder module,with diametric magnet,2,6000,Pitch + roll
+Electronics,Micro switch,KW11 or similar,1,1500,Mode (SEQ) detection
+Electronics,Tactile button,6mm,1,0,Calibration (parts on hand)
+Electronics,Wire/USB cable,Dupont + USB-C 2m,1,5000,
+Bearings,608ZZ,8x22x7,4,5000,Pack of 10 (4 used)
+Bearings,625ZZ,5x16x5,2,4000,Pack of 10 (2 used) — detent rollers
+Metal,SUS304 round bar,Ø12 × 250mm,1,6000,Lever (cut to ~205mm)
+Metal,Gate plate laser cut,SUS304 3t 104×140 (DXF),1,30000,Online laser cutting shop quote (incl. shipping) — test with the printed version first
+Springs,Die spring (cam),Ø12×25 medium (red) k≈15–25N/mm,1,3000,Pack of 5
+Springs,Compression spring (lateral),OD10 wire 1.2 L0 35 k≈3N/mm,3,5000,S1×2 + S2×1 (+ spares)
+Fasteners,M8 bolt,M8×60 ×2 / M8×25 ×1 / M8×80 (partial thread) ×1 + nut ×4 + washer ×10,1,5000,Axles + tail
+Fasteners,M5 bolts/set screws,M5×40·M5×30·M5×20 + set screws M5×8 ×3·M5×20 ×2,1,4000,Arm pivot·roller·stop·lever clamp
+Fasteners,M5 threaded rod,M5 × 100mm ×4 + nuts ×8,1,3000,Gate posts
+Fasteners,M6/M8 set screws,M6×30 ×1 · M8×16 ×1,1,1500,Cam/S2 preload
+Fasteners,Screw + heat-set insert kit,M3/M4/M5,1,12000,Skip if you already have one
+Printing,Filament,PETG or ASA ~0.8kg,1,16000,
+Optional,Aluminium knob,Ø12 bore set-screw type,1,15000,Printed knob included

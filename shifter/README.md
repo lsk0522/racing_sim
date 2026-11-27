@@ -11,10 +11,11 @@
 ## 폴더
 | 폴더 | 내용 |
 |---|---|
-| `hardware/` | 모듈 M1~M10 (`.step` CNC·참고, `.stl` 출력, `.dxf` 판재 윤곽), `_ASSEMBLY_LSK_Shifter_v0.5.step`, `BOM.csv`, `parts_table.csv` |
-| `cad/` | 파라메트릭 소스: `cam.py`(손맛 곡선 → 캠), `cad.py`(전 부품), `check.py`(간섭 검사), `export.py`, `render_pbr.py`, `feel_chart.py` / `archive/` v0.1~v0.4 소스 |
+| [`CAD/`](CAD/) | **버전별 산출물** `v0.1`~`v0.5` — 각 버전 안에 `mach/sheet`(판재 가공) · `mach/block`(블록 가공) · `print`(출력) · `buy`(구매품) · `assembly`(조립) |
+| `src/` | 파라메트릭 소스: `cam.py`(손맛 곡선 → 캠), `cad.py`(전 부품), `check.py`(간섭 검사), `export.py`, `make_drawings.py` + `drawings.py`(A4 도면, STEP 은선 처리), `smooth2d.py`(매끄러운 2D 경계), `iso_tol.py`(ISO 286 공차), `render_pbr.py`, `feel_chart.py`, `BOM.csv` / `archive/` v0.1~v0.4 소스 |
 | `firmware/` | PlatformIO 프로젝트, `bin/*.uf2` 바로 굽기용 — [FIRMWARE.md](firmware/FIRMWARE.md) |
 | `docs/` | `DESIGN_v0.5.md`(외장), `DESIGN_mechanism_v0.4.md`(메커니즘·가공·조립·튜닝), `history/` |
+| [`docs/dxf/`](docs/dxf/) | **가공 도면** 버전별 (DXF·PDF·PNG + YAML 원본) — 치수·끼워맞춤·기하공차·후처리, ISO 2768-mK — [v0.5 목록](docs/dxf/v0.5/INDEX.md) |
 | `images/` | 렌더, 손맛 곡선, 배선도 |
 
 ## 모듈
@@ -31,11 +32,14 @@
 | M9 | 센서 캡 ×2 + 핀 칼라 | 출력 |
 | M10 | 외장 셸 (곡면) | ABS 출력 |
 
-## CAD 다시 생성하기
+## CAD·도면 다시 생성하기
 ```bash
-pip install -r cad/requirements.txt
-cd cad
-python3 cam.py         # 손맛 곡선 시뮬레이션
-python3 check.py       # 간섭 검사 (41개 자세)
-python3 export.py      # STEP/STL/DXF 다시 내보내기 (out/ 에 생성)
+pip install -r src/requirements.txt
+cd src
+python3 cam.py           # 손맛 곡선 시뮬레이션
+python3 check.py         # 간섭 검사 (41개 자세)
+python3 export.py        # → ../CAD/v0.5/ (mach/sheet, mach/block, print, buy, assembly)
+python3 make_drawings.py # → ../docs/dxf/v0.5/ (STEP + YAML → A4 DXF·PDF·PNG)
 ```
+
+![](docs/dxf/v0.5/png/LSK-SH-M2-01_tower_negY.png)
