@@ -3,9 +3,12 @@
 도면 생성기: 부품 STEP + 도면 스펙 YAML → A4 가로 DXF (+ PDF/PNG 미리보기), 흑백
 
 적용 규격
- - 용지: A4 가로, 윤곽선 + 중심 마크 (ISO 5457 / KS A ISO 5457, 철 여백 20mm, 나머지 10mm)
- - 오른쪽 칸 (KS 양식): 개정 이력 → 주서 → 부품란 → 표제란 (ISO 7200 항목)
- - 왼쪽 위: 품번 + 표면 거칠기 간략 지시 (ISO 1302: 일반 기호 + 괄호 안 개별 값)
+ - 용지: A4 가로, 윤곽선(사방 10mm) + 중심 마크, 아래에 저작권 문구·용지 크기
+ - 양식 (실무 도면 형식): 오른쪽 아래 표제란 = 부품 행(NO·DESCRIPTION·MATERIAL·QTY·SIZE·REMARKS)
+   + 가공 기호표(CLASS OF FINISH) + 일반 공차표(ISO 2768-m) + 로고·결재(DESIGNED·CHECKED·APPROVED)·제목
+   + 단위·척도·질량·투상법·도번 / 왼쪽 아래 개정란(△) / 오른쪽 위 표면 거칠기 일괄 지시 (ISO 1302)
+ - 구멍·탭 지시: 화살표 지시선 + 밑줄 글자 (예: 2-M3 탭 깊이 8)
+ - 투상도 배치: 표제란·개정란·주서를 피해서 가장 큰 척도로 자동 배치
  - 선: ISO 128-20 선 그룹 0.35 (외형선 0.35 / 가는 선 0.18, 숨은선 02, 중심선 04), 색은 모두 7 (흑백)
  - 문자: ISO 3098 / KS (치수 3.5, 주서 3.0, 제목 5)
  - 투상: 3각법 ISO 128-30 / ISO 5456-2, 척도 ISO 5455
@@ -33,9 +36,7 @@ from OCP.GeomAbs import GeomAbs_Line, GeomAbs_Circle
 from OCP.GCPnts import GCPnts_AbscissaPoint
 
 A4 = (297.0, 210.0)                            # A4 가로 (기본)
-FRAME = (20.0, 10.0, 287.0, 200.0)             # 윤곽선: 철 여백 20, 나머지 10 (ISO 5457 / KS)
-RC_W = 100.0                                   # 오른쪽 칸 폭 (개정 이력 · 공통 주서 · 부품란 · 표제란)
-RC_X0 = FRAME[2] - RC_W
+FRAME = (10.0, 10.0, 287.0, 200.0)             # 윤곽선 (사방 10mm)
 TH = 3.5                                       # 치수 문자 (KS·ISO 3098 3.5)
 TN = 3.0                                       # 주서 문자
 STD_SCALES = [5, 2, 1, 0.5, 0.2, 0.1]          # ISO 5455
@@ -341,97 +342,145 @@ def add_dim(msp, d, P, scale, vbox=None, stack=None):
                                text=pre + "R<>" + suf, dxfattribs={"layer": "DIM"}).render()
 
 
-# ---------------------------------------------------------------- 용지 (윤곽선 + 중심 마크만)
+# ---------------------------------------------------------------- 용지 (윤곽선 + 중심 마크)
 def sheet_frame(msp):
     W, H = A4
     x0, y0, x1, y1 = FRAME
     rect(msp, x0, y0, x1, y1, "FRAME")                              # 윤곽선 0.7
-    for (a, b) in [((W / 2, 0), (W / 2, y0 + 5)), ((W / 2, H), (W / 2, y1 - 5)),   # 중심 마크
+    for (a, b) in [((W / 2, 0), (W / 2, y0)), ((W / 2, H), (W / 2, y1 - 5)),   # 중심 마크 (아래는 표제란이 있어 윤곽선까지)
                    ((0, H / 2), (x0 + 5, H / 2)), ((W, H / 2), (x1 - 5, H / 2))]:
         msp.add_line(a, b, dxfattribs={"layer": "FRAME"})
+    text(msp, "이 도면의 저작권은 Sunggwan에게 있으며, 허락 없이 복제·전달·사용할 수 없습니다.", x0 + 2, y0 / 2, 1.8)
+    text(msp, f"A4 ({W:g}×{H:g})", x1, y0 / 2, 1.8, align=TextEntityAlignment.MIDDLE_RIGHT)
 
 
-def field(msp, x0, y0, x1, y1, label, value, vh=TN, align="left"):
+def cell(msp, x0, y0, x1, y1, value="", vh=TN, align="center", label="", lh=1.5):
+    """칸 하나: 선택적 작은 라벨(왼쪽 위) + 값 (칸 폭에 맞게 글자 자동 축소)."""
     rect(msp, x0, y0, x1, y1, "THIN")
     if label:
-        text(msp, label, x0 + 1.0, y1 - 1.5, 1.8)
+        text(msp, label, x0 + 0.8, y1 - lh * 0.8, lh)
     if value:
-        vh = max(1.8, min(vh, vh * (x1 - x0 - 2.5) / max(text_width(value, vh), 1e-6)))
-        yy = y0 + (y1 - y0) * (0.36 if label else 0.5)
+        vh = max(1.5, min(vh, vh * (x1 - x0 - 1.6) / max(text_width(value, vh), 1e-6)))
+        yy = y0 + (y1 - y0) * (0.4 if label else 0.5)
         if align == "center":
             text(msp, value, (x0 + x1) / 2, yy, vh, align=TextEntityAlignment.MIDDLE_CENTER)
         else:
-            text(msp, value, x0 + 1.5, yy, vh)
+            text(msp, value, x0 + 1.2, yy, vh)
 
 
-def title_block(msp, spec, scale, rev_date):
-    """표제란 (ISO 7200 항목, 폭 100, 오른쪽 아래). 반환: 윗변 y"""
-    x0, x1, y0 = RC_X0, FRAME[2], FRAME[1]
-    r = 8.0
-    sc = f"{scale:g}:1" if scale >= 1 else f"1:{1 / scale:g}"
-    rows = [  # 아래 → 위: [(폭, 라벨, 값, 글자, 정렬)]
-        [(35, "법적 소유자", "Sunggwan", TN, "left"), (35, "문서 종류", spec.get("doc_type", "부품도 (가공)"), TN, "left"),
-         (30, "문서 상태", spec.get("status", "검토 중"), TN, "left")],
-        [(35, "작성자", "Sunggwan", TN, "left"), (35, "승인자", spec.get("approved", ""), TN, "left"),
-         (30, "발행일", str(rev_date), TN, "center")],
-        [(45, "조립품", spec.get("assembly", "LSK H/SEQ Shifter"), TN, "left"), (20, "척도", sc, TN, "center"),
-         (35, "투상법", "", TN, "left")],
-        [(45, "도면 번호", spec["part_no"], 3.5, "left"), (15, "개정", spec.get("rev", "A"), 3.5, "center"),
-         (20, "단위", "mm", TN, "center"), (20, "시트", "1/1", TN, "center")],
-    ]
-    for i, row in enumerate(rows):
-        x = x0
-        for w, lab, val, h, al in row:
-            field(msp, x, y0 + r * i, x + w, y0 + r * (i + 1), lab, val, h, al)
-            if lab == "투상법":
-                third_angle_symbol(msp, x + 8, y0 + r * i + 3.2, 0.5)
-                text(msp, "3각법", x + 23, y0 + r * i + 3.2, 2.5)
-            x += w
-    yt = y0 + r * len(rows)
-    field(msp, x0, yt, x1, yt + 12, "제목", spec["name"], 5.0, "left")
-    yt += 12
-    rect(msp, x0, y0, x1, yt, "TB")
-    return yt
+def mini_finish(msp, x, y, k=1.0, removed=True):
+    """표 안의 작은 거칠기 기호 (ISO 1302). removed=False → 제거 가공 금지(원)."""
+    a = 1.6 * k
+    msp.add_lwpolyline([(x - a * 0.58, y + a), (x, y), (x + 2 * a * 0.58, y + 2 * a)], dxfattribs={"layer": "THIN"})
+    if removed:
+        msp.add_line((x - a * 0.58, y + a), (x + a * 0.58, y + a), dxfattribs={"layer": "THIN"})
+    else:
+        msp.add_circle((x, y + a * 0.55), a * 0.45, dxfattribs={"layer": "THIN"})
 
 
-def parts_list(msp, spec, mass, y0):
-    """부품란: 품번 | 품명 | 재질 | 수량 | 비고. 반환: 윗변 y"""
-    x0, x1 = RC_X0, FRAME[2]
-    cols = [("품번", 10), ("품명", 27), ("재질", 19), ("수량", 9), ("소재", 23), ("질량", 12)]
+def finish_short(spec):
+    import re
+    for f in spec.get("finish", []):
+        if "아노다이징" in f:
+            m = re.search(r"((?:하드|블랙|투명|그래파이트)\s*)?아노다이징[^—(,→]*?(?=\s*(?:또는|$|—|\(|,|→))", f)
+            if m:
+                return m.group(0).strip()
+    return spec.get("remarks", "—")
+
+
+GT_ROWS = [("0.5 ~ 6", "±0.1"), ("6 ~ 30", "±0.2"), ("30 ~ 120", "±0.3"), ("120 ~ 400", "±0.5"),
+           ("400 ~ 1000", "±0.8"), ("1000 ~ 2000", "±1.2")]                      # ISO 2768-1 m
+FIN_ROWS = [(False, "소재면"), (True, "Ra 12.5"), (True, "Ra 6.3"), (True, "Ra 3.2"), (True, "Ra 1.6"), (True, "Ra 0.8")]
+TB_W, TB_H = 175.0, 46.0
+TB_X0 = FRAME[2] - TB_W
+REV_W = 90.0
+
+
+def title_block(msp, spec, scale, mass, rev_date):
+    """오른쪽 아래 표제란 (사진 양식): 부품 행 + 가공 기호표 + 일반 공차표 + 로고·결재·제목 + 단위·척도·투상·도번."""
+    X0, X1, Y0 = TB_X0, FRAME[2], FRAME[1]
+    Y1 = Y0 + TB_H
+    # ① 부품 행 (값 위, 라벨 아래)
+    yl, yv = Y0 + 35.0, Y0 + 39.0
+    cols = [(18, "NO", spec["part_no"].replace("LSK-SH-", "")), (44, "DESCRIPTION", spec["name"]),
+            (26, "MATERIAL", spec.get("material", "")), (10, "QTY", str(spec.get("qty", 1))),
+            (37, "SIZE", spec.get("stock", "")), (40, "REMARKS", finish_short(spec))]
+    x = X0
+    for w, lab, val in cols:
+        cell(msp, x, yv, x + w, Y1, val, 3.0)
+        cell(msp, x, yl, x + w, yv, lab, 1.6)
+        x += w
+    # ② 가공 기호표 (CLASS OF FINISH, ISO 1302 / 21920)
+    rh = (yl - Y0) / 7
+    xa, xb = X0, X0 + 26
+    cell(msp, xa, yl - rh, xb, yl, "CLASS OF FINISH", 1.6)
+    for i, (rem, val) in enumerate(FIN_ROWS):
+        y = yl - rh * (i + 2)
+        rect(msp, xa, y, xa + 9, y + rh, "THIN"); mini_finish(msp, xa + 3.6, y + 0.6, 0.62, rem)
+        cell(msp, xa + 9, y, xb, y + rh, val, 2.0)
+    # ③ 일반 공차표 (ISO 2768-1 m)
+    xc = xb + 36
+    cell(msp, xb, yl - rh, xc, yl, "GENERAL TOL. ISO 2768-m", 1.6)
+    for i, (rg, tol) in enumerate(GT_ROWS):
+        y = yl - rh * (i + 2)
+        cell(msp, xb, y, xb + 22, y + rh, rg, 2.0); cell(msp, xb + 22, y, xc, y + rh, tol, 2.0)
+    # ④ 로고 · 결재 · 제목
+    yA = Y0 + 11.0
+    cell(msp, xc, yA, xc + 30, yl, "")
+    text(msp, "SUNGGWAN", xc + 15, yA + 15, 3.5, align=TextEntityAlignment.MIDDLE_CENTER)
+    text(msp, "LSK Racing Sim", xc + 15, yA + 8, 2.0, align=TextEntityAlignment.MIDDLE_CENTER)
+    msp.add_line((xc + 4, yA + 11.6), (xc + 26, yA + 11.6), dxfattribs={"layer": "THIN"})
+    xd = xc + 30
+    for i, (lab, who) in enumerate((("DESIGNED", "Sunggwan"), ("CHECKED", spec.get("checked", "")), ("APPROVED", spec.get("approved", "")))):
+        cell(msp, xd + 12 * i, yl - 4, xd + 12 * (i + 1), yl, lab, 1.4)
+        cell(msp, xd + 12 * i, yA, xd + 12 * (i + 1), yl - 4, who, 1.9)
+    xe = xd + 36
+    cell(msp, xe, yA, X1, yl, "", label="TITLE")
+    def fit(s, w, h):
+        return max(1.8, min(h, h * w / max(text_width(s, h), 1e-6)))
+    t1, t2 = spec.get("title", spec["name"]), spec.get("assembly", "LSK H/SEQ SHIFTER")
+    text(msp, t1, (xe + X1) / 2, yA + 14.5, fit(t1, X1 - xe - 4, 4.5), align=TextEntityAlignment.MIDDLE_CENTER)
+    text(msp, t2, (xe + X1) / 2, yA + 6.0, fit(t2, X1 - xe - 4, 3.0), align=TextEntityAlignment.MIDDLE_CENTER)
+    # ⑤ 단위 · 척도 · 질량 · 투상 · 도번
+    sc = f"{scale:g}/1" if scale >= 1 else f"1/{1 / scale:g}"
     m = f"{mass:.0f} g" if mass >= 10 else f"{mass:.1f} g"
-    rows = [["1", spec["name"], spec.get("material", ""), str(spec.get("qty", 1)), spec.get("stock", ""), m],
-            [c for c, _ in cols]]
-    rh = 7.0
-    for i, row in enumerate(rows):             # 아래에 머리줄 (KS 부품란 형식: 머리줄이 표제란 쪽)
-        x = x0
-        for (lab, w), v in zip(cols, row[::1] if i == 0 else row):
-            field(msp, x, y0 + rh * (1 - i), x + w, y0 + rh * (2 - i), "", v, 2.5 if i == 0 else TN, "center")
-            x += w
-    rect(msp, x0, y0, x1, y0 + rh * 2, "TB")
-    return y0 + rh * 2
+    x = xc
+    for w, lab, val in ((15, "UNIT", "MM"), (17, "SCALE", sc), (18, "MASS", m)):
+        cell(msp, x, Y0, x + w, yA, val, 2.8, label=lab); x += w
+    cell(msp, x, Y0, x + 16, yA, "", label="PROJ.")
+    third_angle_symbol(msp, x + 4.0, Y0 + 4.6, 0.48); x += 16
+    cell(msp, x, Y0, X1, yA, spec["part_no"] + f"  ({spec.get('rev', 'A')})", 3.5, label="DWG NO.")
+    msp.add_line((X0, yl), (X1, yl), dxfattribs={"layer": "THIN"})
+    rect(msp, X0, Y0, X1, Y1, "TB")
+    return (X0, Y0, X1, Y1)
 
 
-def revision_table(msp, revs):
-    """개정 이력 (오른쪽 위). 반환: 아랫변 y"""
-    x0, x1, y1 = RC_X0, FRAME[2], FRAME[3]
-    cols = [("개정", 10), ("내용", 40), ("날짜", 26), ("작성", 24)]
-    rh = 6.0
-    rows = [[c for c, _ in cols]] + [[r.get("rev", ""), r.get("desc", ""), str(r.get("date", "")), r.get("by", "Sunggwan")] for r in revs]
-    for i, row in enumerate(rows):
-        yt = y1 - rh * i; x = x0
-        for (lab, w), v in zip(cols, row):
-            field(msp, x, yt - rh, x + w, yt, "", str(v), 2.5, "center")
-            x += w
-    rect(msp, x0, y1 - rh * len(rows), x1, y1, "TB")
-    return y1 - rh * len(rows)
+def revision_block(msp, revs):
+    """왼쪽 아래 개정란 (사진 양식): 맨 아래 머리줄, 위로 △번호 이력."""
+    X0, Y0 = FRAME[0], FRAME[1]
+    cols = [("NO", 10), ("REVISION", 46), ("DATE", 18), ("APPROVED", 16)]
+    rh = 5.5
+    x = X0
+    for lab, w in cols:
+        cell(msp, x, Y0, x + w, Y0 + rh, lab, 1.8); x += w
+    for i, r in enumerate(revs):
+        y = Y0 + rh * (i + 1); x = X0
+        vals = ["", r.get("desc", ""), str(r.get("date", "")), r.get("by", "Sunggwan")]
+        for (lab, w), v in zip(cols, vals):
+            cell(msp, x, y, x + w, y + rh, v, 2.2); x += w
+        cx, cy = X0 + 5, y + rh / 2 - 0.4          # △ + 개정 기호
+        msp.add_lwpolyline([(cx - 2.6, cy - 1.7), (cx + 2.6, cy - 1.7), (cx, cy + 2.6), (cx - 2.6, cy - 1.7)], dxfattribs={"layer": "THIN"})
+        text(msp, r.get("rev", ""), cx, cy - 0.35, 1.8, align=TextEntityAlignment.MIDDLE_CENTER)
+    top = Y0 + rh * (len(revs) + 1)
+    rect(msp, X0, Y0, X0 + REV_W, top, "TB")
+    return (X0, Y0, X0 + REV_W, top)
 
 
-# ---------------------------------------------------------------- 공통 주서
+# ---------------------------------------------------------------- 주서 / 거칠기 일괄 기호 / 구멍 지시
 def build_notes(spec):
     n = [f"공정: {spec.get('process', '')}",
-         f"일반 공차: {spec.get('general_tolerance', 'ISO 2768-mK')}, 공차 표시 방식 ISO 8015",
          f"지시 없는 모서리: {spec.get('edges', 'ISO 13715 — 바깥 −0.3 / 안쪽 +0.3, 바리 없을 것')}",
-         "끼워맞춤 ISO 286, 기하공차 ISO 1101, 데이텀 ISO 5459"]
+         f"일반 공차 {spec.get('general_tolerance', 'ISO 2768-mK')} (표제란 표), ISO 8015, 끼워맞춤 ISO 286, 기하공차 ISO 1101"]
     fin = spec.get("finish", [])
     if fin:
         n.append("후처리: " + " → ".join(f"{chr(0x2460 + i)} {f}" for i, f in enumerate(fin)))
@@ -446,23 +495,74 @@ def layout_notes(notes, width, h=TN):
     return lines
 
 
-def header_symbols(msp, x, y, spec):
-    """도면 왼쪽 위: 품번 원 + 표면 거칠기 (일반 기호 + 괄호 안 개별 지시값) — ISO 1302 간략 지시."""
-    no = "1"                                   # 부품란 품번과 같은 번호 (부품 1개 = 도면 1장)
-    msp.add_circle((x + 4, y), 4, dxfattribs={"layer": "THIN"})
-    text(msp, no, x + 4, y, 4.0, align=TextEntityAlignment.MIDDLE_CENTER)
+def general_roughness(msp, spec):
+    """오른쪽 위: √Ra 3.2 (√Ra 1.6, √Ra 0.8) — ISO 1302 간략 지시. 반환: 차지하는 사각형."""
     gen = spec.get("roughness_default", "Ra 3.2")
-    xs = x + 13
-    roughness(msp, xs, y - 4, gen)
-    xs += 3.0 * TH * 0.58 + text_width(gen, TH) + 6
     vals = sorted({r["value"] for r in spec.get("roughness", [])} - {gen}, key=lambda v: float(v.split()[-1]))
+    w1 = lambda v: 3.0 * TH * 0.58 + text_width(v, TH) + 6
+    total = w1(gen) + (sum(w1(v) for v in vals) + 6 if vals else 0)
+    x = FRAME[2] - 4 - total; y = FRAME[3] - 13
+    roughness(msp, x + 2, y, gen); xs = x + 2 + w1(gen)
     if vals:
-        text(msp, "(", xs - 1, y, 6.0, align=TextEntityAlignment.MIDDLE_CENTER)
-        xs += 2
+        text(msp, "(", xs - 2, y + 4, 6.0, align=TextEntityAlignment.MIDDLE_CENTER); xs += 2
         for v in vals:
-            roughness(msp, xs + 2, y - 4, v)
-            xs += 3.0 * TH * 0.58 + text_width(v, TH) + 6
-        text(msp, ")", xs - 2, y, 6.0, align=TextEntityAlignment.MIDDLE_CENTER)
+            roughness(msp, xs + 2, y, v); xs += w1(v)
+        text(msp, ")", xs - 3, y + 4, 6.0, align=TextEntityAlignment.MIDDLE_CENTER)
+    return (x - 2, y - 2, FRAME[2], FRAME[3])
+
+
+def callout(msp, target, at, lines):
+    """구멍·탭 지시 (사진 양식): 화살표 지시선 → 밑줄 친 글자. 예) 2-M3 탭 깊이 8"""
+    lines = [lines] if isinstance(lines, str) else lines
+    w = max(text_width(s, TH) for s in lines) + 2
+    left = at[0] < target[0]
+    x0 = at[0] - w if left else at[0]
+    msp.add_lwpolyline([target, at], dxfattribs={"layer": "DIM"})
+    arrow(msp, target, at, "DIM", 3.0)
+    msp.add_line((x0, at[1]), (x0 + w, at[1]), dxfattribs={"layer": "DIM"})
+    for i, s in enumerate(lines):
+        text(msp, s, x0 + 1, at[1] + 1.2 + TH * 0.5 + (TH * 1.5) * (len(lines) - 1 - i), TH, "DIM")
+
+
+# ---------------------------------------------------------------- 배치 (장애물 피해서 가장 큰 척도)
+def _overlap(a, b, pad=0.0):
+    return not (a[2] + pad <= b[0] or b[2] + pad <= a[0] or a[3] + pad <= b[1] or b[3] + pad <= a[1])
+
+
+def place_views(sizes, margins, obstacles, scales, inner, ann_fn=None):
+    """sizes = (fw, fh, tw, th, rw, rh), margins dict, ann_fn(s) → 주석 사각형(정면도 원점 기준) → (scale, x0, y0) or None"""
+    fw, fh, tw, th, rw, rh = sizes
+    M = margins
+    ix0, iy0, ix1, iy1 = inner
+    cx_ref, cy_ref = (ix0 + ix1) / 2, (iy0 + iy1) / 2 + 8
+    for s in scales:
+        best = None
+        def rects(x0, y0):
+            R = [(x0 - M["ml"], y0 - M["mb"], x0 + fw * s + (M["gap_h"] / 2 if rw else M["mr"]),
+                  y0 + fh * s + (M["gap_v"] / 2 if th else M["mt_f"]))]
+            if th:
+                R.append((x0 - M["ml"], y0 + fh * s + M["gap_v"] / 2, x0 + tw * s + (M["mr_t"] if not rw else M["gap_h"] / 2),
+                          y0 + fh * s + M["gap_v"] + th * s + M["mt"]))
+            if rw:
+                R.append((x0 + fw * s + M["gap_h"] / 2, y0 - M["mb_r"], x0 + fw * s + M["gap_h"] + rw * s + M["mr"],
+                          y0 + rh * s + M["mt_r"]))
+            return R
+        A = ann_fn(s) if ann_fn else []
+        for x0 in np.arange(ix0, ix1, 1.5):
+            for y0 in np.arange(iy0, iy1, 1.5):
+                R = rects(x0, y0) + [(a[0] + x0, a[1] + y0, a[2] + x0, a[3] + y0) for a in A]
+                if any(r[0] < ix0 or r[1] < iy0 or r[2] > ix1 or r[3] > iy1 for r in R):
+                    continue
+                if any(_overlap(r, o, 2.0) for r in R for o in obstacles):
+                    continue
+                gx0 = min(r[0] for r in R); gx1 = max(r[2] for r in R)
+                gy0 = min(r[1] for r in R); gy1 = max(r[3] for r in R)
+                d = ((gx0 + gx1) / 2 - cx_ref) ** 2 + ((gy0 + gy1) / 2 - cy_ref) ** 2
+                if best is None or d < best[0]:
+                    best = (d, x0, y0)
+        if best:
+            return s, best[1], best[2]
+    return None
 
 
 # ---------------------------------------------------------------- 메인
@@ -479,23 +579,91 @@ def make_drawing(spec, shape, outdir, rev_date=None):
     auto = 1 if spec.get("auto_overall", True) else 0
     depth_view = "right" if "right" in views else ("top" if "top" in views else None)
     band = lambda k: (DIM_FIRST + DIM_STEP * (k - 1) + 5) if k else 4
-    ml = band(max(cnt("front", "left") + auto, cnt("top", "left") + (auto if depth_view == "top" else 0)))
-    mb = band(cnt("front", "below") + auto)
-    mr = band(cnt("right", "right") if rw else max(cnt("front", "right"), cnt("top", "right")))
-    mt = band(cnt("top", "above") + (auto if depth_view == "top" else 0)) + 2
-    gap_h = band(cnt("front", "right") + cnt("right", "left")) + 4 if rw else 0
-    gap_v = band(cnt("front", "above") + cnt("top", "below")) + 4 if th else 0
-    if rw and not th:
-        mt = max(mt, band(cnt("right", "above") + (auto if depth_view == "right" else 0)) + 2)
+    M = dict(
+        ml=band(max(cnt("front", "left") + auto, cnt("top", "left") + (auto if depth_view == "top" else 0))),
+        mb=band(cnt("front", "below") + auto),
+        mr=band(cnt("right", "right") if rw else cnt("front", "right")),
+        mr_t=band(cnt("top", "right")),
+        mt=band(cnt("top", "above")) + 2,
+        mt_f=band(cnt("front", "above")) + 2,
+        mt_r=band(cnt("right", "above") + (auto if depth_view == "right" else 0)) + 2,
+        mb_r=band(cnt("right", "below")),
+        gap_h=(band(cnt("front", "right") + cnt("right", "left")) + 4) if rw else 0,
+        gap_v=(band(cnt("front", "above") + cnt("top", "below")) + 4) if th else 0)
 
-    HEAD = 12.0                                       # 품번·거칠기 표시 줄
-    area = (FRAME[0], FRAME[1], RC_X0, FRAME[3] - HEAD)
-    AW = area[2] - area[0] - ml - mr - gap_h
-    AH = area[3] - area[1] - mb - mt - gap_v
-    scale = spec.get("scale") or next((s_ for s_ in STD_SCALES if (fw + rw) * s_ <= AW and (fh + th) * s_ <= AH), STD_SCALES[-1])
-    x0 = area[0] + ml + max(0, (AW - (fw + rw) * scale) / 2)
-    y0 = area[1] + mb + max(0, (AH - (fh + th) * scale) / 2)
-    origin = {"front": (x0, y0), "top": (x0, y0 + fh * scale + gap_v), "right": (x0 + fw * scale + gap_h, y0)}
+    k = 1.0                                           # 스펙 dx/dy = 용지 위 mm
+
+    def ann_rects(s):
+        """치수 밖 주석(기하공차틀·데이텀·거칠기·구멍 지시·지름 치수 글자)의 사각형 — 정면도 왼쪽 아래 = (0, 0)"""
+        org = {"front": (0, 0), "top": (0, fh * s + M["gap_v"]), "right": (fw * s + M["gap_h"], 0)}
+        def P0(view, p3):
+            b = proj[view][2]; u, w = VIEWS[view][0](p3); o = org[view]
+            return (o[0] + (u - b[0]) * s, o[1] + (w - b[1]) * s)
+        R = []
+        for g in spec.get("gdt", []):
+            t = P0(g["view"], g["at"]); x, y = t[0] + g.get("dx", 14) * k, t[1] + g.get("dy", 10) * k
+            w = 2 * TH + max(2 * TH * 1.6, text_width(g["tol"], TH) + 2.5) + 2 * TH * len(g.get("datums", []))
+            R.append((x, y, x + w, y + 2 * TH))
+        for dd in (spec.get("datums") or {}).values():
+            t = P0(dd["view"], dd["at"]); x, y = t[0] + dd.get("dx", -10) * k, t[1] + dd.get("dy", -9) * k
+            R.append((x - TH, y - TH, x + TH, y + TH))
+        for r in spec.get("roughness", []):
+            t = P0(r["view"], r["at"]); x, y = t[0] + r.get("dx", 5) * k, t[1] + r.get("dy", 5) * k
+            R.append((x - 2, y, x + 3 * TH * 0.58 + text_width(r["value"], TH) + 2, y + 3 * TH + 1))
+        for c in spec.get("callouts", []):
+            t = P0(c["view"], c["at"]); ax, ay = t[0] + c.get("dx", 15), t[1] + c.get("dy", 12)
+            L = [c["text"]] if isinstance(c["text"], str) else c["text"]
+            w = max(text_width(q, TH) for q in L) + 2
+            x0 = ax - w if ax < t[0] else ax
+            R.append((x0, ay - 1, x0 + w, ay + 1.5 + TH * 1.5 * len(L)))
+        for d in spec.get("dims", []):
+            if d.get("type") in ("diameter", "radius"):
+                t = P0(d["view"], d["center"]); a = math.radians(d.get("angle", 45)); r = d["r"] * s + d.get("lead", 8)
+                x, y = t[0] + r * math.cos(a), t[1] + r * math.sin(a)
+                w = text_width("Ø00.0 " + d.get("fit", ""), TH) + (10 if ("fit" in d or "tol" in d) else 0)
+                R.append((x - w if math.cos(a) < -0.2 else x, y - 1, x + w if math.cos(a) >= -0.2 else x, y + TH + 2))
+        return R
+
+    revs = spec.get("revisions") or [{"rev": spec.get("rev", "A"), "date": str(rev_date), "desc": "최초 발행", "by": "Sunggwan"}]
+    mat = spec.get("material", "Al 6061-T6")
+    mass = shape.volume / 1000 * DENSITY.get(mat, 2.70)
+    # 고정 요소 (위치가 정해진 것) — 크기만 미리 계산
+    tb = (TB_X0, FRAME[1], FRAME[2], FRAME[1] + TB_H)
+    rv = (FRAME[0], FRAME[1], FRAME[0] + REV_W, FRAME[1] + 5.5 * (len(revs) + 1))
+    gen = spec.get("roughness_default", "Ra 3.2")
+    vals = {r["value"] for r in spec.get("roughness", [])} - {gen}
+    rg_w = (3.0 * TH * 0.58 + text_width(gen, TH) + 6) * (1 + len(vals)) + (6 if vals else 0)
+    rg = (FRAME[2] - 6 - rg_w, FRAME[3] - 15, FRAME[2], FRAME[3])
+    notes = build_notes(spec)
+    lh = TN * 1.5
+    # 주서 위치 후보: (a) 표제란 위 넓게 (b) 개정란 위 왼쪽 (c) 왼쪽 위
+    cands = []
+    for name in ("over_tb", "over_rev", "top_left"):
+        if name == "over_tb":
+            w = TB_W - 4; L = layout_notes(notes, w); h = len(L) * lh + 8
+            box_ = (TB_X0, tb[3] + 2, FRAME[2], tb[3] + 2 + h)
+        elif name == "over_rev":
+            w = TB_X0 - FRAME[0] - 8; L = layout_notes(notes, w); h = len(L) * lh + 8
+            box_ = (FRAME[0], rv[3] + 2, TB_X0 - 4, rv[3] + 2 + h)
+        else:
+            w = 130.0; L = layout_notes(notes, w); h = len(L) * lh + 8
+            box_ = (FRAME[0], FRAME[3] - h, FRAME[0] + w + 4, FRAME[3])
+        if box_[3] > FRAME[3] or (name == "top_left" and _overlap(box_, rg)):
+            continue
+        obst = [tb, rv, rg, box_]
+        inner = (FRAME[0] + 2, FRAME[1] + 2, FRAME[2] - 2, FRAME[3] - 2)
+        scales = [spec["scale"]] if spec.get("scale") else STD_SCALES
+        r = place_views((fw, fh, tw, th, rw, rh), M, obst, scales, inner, ann_rects)
+        if r:
+            cands.append((r[0], name, box_, L, r[1], r[2]))
+    if not cands:                                     # 마지막 수단: 가장 작은 척도로 왼쪽 아래에 강제 배치
+        L = layout_notes(notes, TB_W - 4); h = len(L) * lh + 8
+        cands = [(STD_SCALES[-1], "over_tb", (TB_X0, tb[3] + 2, FRAME[2], tb[3] + 2 + h), L, FRAME[0] + 20, rv[3] + 20)]
+    order = {"over_tb": 0, "over_rev": 1, "top_left": 2}
+    cands.sort(key=lambda c: (-c[0], order[c[1]]))
+    scale, nname, nbox, nlines, x0, y0 = cands[0]
+
+    origin = {"front": (x0, y0), "top": (x0, y0 + fh * scale + M["gap_v"]), "right": (x0 + fw * scale + M["gap_h"], y0)}
     mappers, vboxes, stack = {}, {}, {}
     ov = {"dimlfac": 1 / scale, "dimdec": 1, "dimzin": 8, "dimtxsty": "KR", "dimtxt": TH}
     for v in views:
@@ -512,7 +680,7 @@ def make_drawing(spec, shape, outdir, rev_date=None):
         cen = {}
         for g in vis + hid:
             if g[0] == "circle" or (g[0] == "arc" and (g[4] - g[3]) % 360 >= 180):
-                k = (round(g[1][0], 2), round(g[1][1], 2)); cen[k] = max(cen.get(k, 0), g[2])
+                ck = (round(g[1][0], 2), round(g[1][1], 2)); cen[ck] = max(cen.get(ck, 0), g[2])
         for (cx, cy), r in cen.items():
             if r * scale < 1.0:
                 continue
@@ -525,22 +693,22 @@ def make_drawing(spec, shape, outdir, rev_date=None):
         def dup(length, direction):
             for d in dims:
                 if d.get("view") == v and d.get("type", "linear") == "linear" and d.get("dir", "h") == direction:
-                    a_, b_ = mapf(d["p1"]), mapf(d["p2"]); k = 0 if direction == "h" else 1
-                    if abs(abs(a_[k] - b_[k]) - length) < 0.01:
+                    a_, b_ = mapf(d["p1"]), mapf(d["p2"]); ax_ = 0 if direction == "h" else 1
+                    if abs(abs(a_[ax_] - b_[ax_]) - length) < 0.01:
                         return True
             return False
         if auto:
             o = lambda side: DIM_FIRST + DIM_STEP * cnt(v, side)
-            L = lambda **kw: msp.add_linear_dim(dimstyle="ISO-A4", override=ov, dxfattribs={"layer": "DIM"}, **kw).render()
+            L_ = lambda **kw: msp.add_linear_dim(dimstyle="ISO-A4", override=ov, dxfattribs={"layer": "DIM"}, **kw).render()
             if v == "front":
                 if not dup(b[2] - b[0], "h"):
-                    L(base=(bx0, by0 - o("below")), p1=(bx0, by0), p2=(bx1, by0), angle=0)
+                    L_(base=(bx0, by0 - o("below")), p1=(bx0, by0), p2=(bx1, by0), angle=0)
                 if not dup(b[3] - b[1], "v"):
-                    L(base=(bx0 - o("left"), by0), p1=(bx0, by0), p2=(bx0, by1), angle=90)
+                    L_(base=(bx0 - o("left"), by0), p1=(bx0, by0), p2=(bx0, by1), angle=90)
             elif v == depth_view == "right" and not dup(b[2] - b[0], "h"):
-                L(base=(bx0, by1 + o("above")), p1=(bx0, by1), p2=(bx1, by1), angle=0)
+                L_(base=(bx0, by1 + o("above")), p1=(bx0, by1), p2=(bx1, by1), angle=0)
             elif v == depth_view == "top" and not dup(b[3] - b[1], "v"):
-                L(base=(bx0 - o("left"), by0), p1=(bx0, by0), p2=(bx0, by1), angle=90)
+                L_(base=(bx0 - o("left"), by0), p1=(bx0, by0), p2=(bx0, by1), angle=90)
 
     P = lambda view: mappers[view]
     for d in dims:
@@ -548,7 +716,6 @@ def make_drawing(spec, shape, outdir, rev_date=None):
             add_dim(msp, d, P(d["view"]), scale, vboxes.get(d["view"]), stack)
         except Exception as ex:
             print("  치수 건너뜀:", d, ex)
-    k = 1.0 if TH <= 2.5 else TH / 2.5                # 스펙 dx/dy는 2.5 기준 → 문자 크기에 맞춰 늘림
     for key, dd in (spec.get("datums") or {}).items():
         t = P(dd["view"])(dd["at"])
         datum_symbol(msp, key, t, (t[0] + dd.get("dx", -10) * k, t[1] + dd.get("dy", -9) * k))
@@ -558,26 +725,18 @@ def make_drawing(spec, shape, outdir, rev_date=None):
     for r in spec.get("roughness", []):
         t = P(r["view"])(r["at"])
         roughness(msp, t[0] + r.get("dx", 5) * k, t[1] + r.get("dy", 5) * k, r["value"], leader_to=t)
-    header_symbols(msp, FRAME[0] + 5, FRAME[3] - HEAD / 2, spec)
+    for c in spec.get("callouts", []):
+        t = P(c["view"])(c["at"])
+        callout(msp, t, (t[0] + c.get("dx", 15), t[1] + c.get("dy", 12)), c["text"])
 
-    # 오른쪽 칸: 표제란 → 부품란 → 공통 주서 → 개정 이력
-    mat = spec.get("material", "Al 6061-T6")
-    mass = shape.volume / 1000 * DENSITY.get(mat, 2.70)
-    yt = title_block(msp, spec, scale, rev_date)
-    yt = parts_list(msp, spec, mass, yt)
-    revs = spec.get("revisions") or [{"rev": spec.get("rev", "A"), "date": str(rev_date), "desc": "최초 발행", "by": "Sunggwan"}]
-    yb = revision_table(msp, revs)
-    msp.add_line((RC_X0, yt), (RC_X0, yb), dxfattribs={"layer": "TB"})
-    notes = build_notes(spec)
-    for h in (TN, 2.75, 2.5):
-        lines = layout_notes(notes, RC_W - 5, h)
-        lh = h * 1.55
-        if 9 + len(lines) * lh <= yb - yt - 2:
-            break
-    ytop = yb - 4
-    text(msp, "주서", RC_X0 + 2, ytop - 2, 3.5)
-    for i, ln in enumerate(lines):
-        text(msp, ln, RC_X0 + 2.5, ytop - 9 - lh * i, h)
+    general_roughness(msp, spec)
+    title_block(msp, spec, scale, mass, rev_date)
+    revision_block(msp, revs)
+    # 주서
+    nx, ny = nbox[0] + 2, nbox[3] - 3
+    text(msp, "주서", nx, ny, 3.5)
+    for i, ln in enumerate(nlines):
+        text(msp, ln, nx + 0.5, ny - 6 - lh * i, TN)
 
     os.makedirs(outdir, exist_ok=True)
     fn = os.path.join(outdir, f"{spec['part_no']}_{spec['part']}.dxf")

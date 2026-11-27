@@ -4,11 +4,12 @@ name: −Y 타워
 material: Al 6061-T6
 stock: 6t 판재 125×125
 process: CNC 2.5D (판재)
-rev: C
+rev: D
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
   - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
+  - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3
   - 비드 블라스트 #120
@@ -21,7 +22,7 @@ dims:
 datums:
   A: {view: right, at: [0, -50, 40], dx: 3, dy: 14}
   B: {view: front, at: [-50, -53, -66], dx: 0, dy: -9}
-  C: {view: front, at: [32, -53, -40], dx: 11, dy: 0}
+  C: {view: front, at: [32, -53, -40], dx: 24, dy: -6}
 gdt:
   - {view: front, at: [-5.66, -53, 5.66], symbol: position, tol: "Ø0.03", datums: [A, B, C], dx: -62, dy: 18}
   - {view: front, at: [-36, -53, 53.5], symbol: parallelism, tol: "0.03", datums: [B], dx: -10, dy: 8}
@@ -29,7 +30,10 @@ gdt:
   - {view: front, at: [-5.66, -53, -5.66], symbol: perpendicularity, tol: "Ø0.02", datums: [A], dx: -56, dy: 15}
 roughness:
   - {view: front, at: [5.66, -53, -5.66], value: "Ra 1.6", dx: 8, dy: -16}
+callouts:
+  - {view: front, at: [11.9, -53, -0.9], text: ["2-M3 탭 관통", "(센서 캡)"], dx: 30, dy: -42}
+  - {view: top, at: [-30, -53, 53.5], text: "2-M3 탭 깊이 8 (게이트)", dx: -14, dy: 14}
 notes:
   - "Ø16 M7 보어: F625ZZ 플랜지 베어링 압입 (바깥면에서), 반대쪽 타워(M2-02)와 위치 동일 가공"
-  - "M3 탭 ×2 (센서 캡, Ø16 좌우 ±11), 윗면 M3 탭 ×2 깊이 8 (X −30 / 22, 게이트), 아랫면 M4 탭 ×2 깊이 9 (X −70 / 26)"
+  - "아랫면 2-M4 탭 깊이 9 (X −70 / 26, 베이스 체결)"
   - "바깥면 케이블 홈 3×2 (X −11.5~−8.5, 보어 아래 ~ 바닥)"

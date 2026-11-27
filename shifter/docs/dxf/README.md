@@ -23,10 +23,10 @@ vX.Y/
 | 모서리 | ISO 13715 | 주기 2 |
 | 표면 거칠기 | ISO 21920 (기호 ISO 1302) | 주기 3 + 개별 기호 |
 | 투상 / 척도 | 3각법 ISO 128-30 · 기호 ISO 5456-2 / ISO 5455 (5:1, 2:1, 1:1, 1:2 …) | 추가 정보란 |
-| 용지·윤곽 | **A4 가로**, 윤곽선(0.7) + 중심 마크만, 철 여백 20 · 나머지 10 (ISO 5457 / KS), 구역 표시 없음, **흑백** | — |
-| 배치 (KS 양식) | 왼쪽 위: 품번 ① + 표면 거칠기 일괄 기호 √Ra 3.2 (√Ra …) / 오른쪽 칸(폭 100) 위→아래: 개정 이력 → 주서 → 부품란 → 표제란 | — |
-| 부품란 | 품번 · 품명 · 재질 · 수량 · 소재 · 질량(STEP 부피 × 밀도) | — |
-| 표제란 | ISO 7200 항목: 제목 · 도면 번호 · 개정 · 단위 · 시트 · 조립품 · 척도 · 투상법(3각법) · 작성자 · 승인자 · 발행일 · 법적 소유자 · 문서 종류 · 문서 상태 | — |
+| 용지·윤곽 | **A4 가로**, 윤곽선(0.7) 사방 10mm + 중심 마크, 구역 표시 없음, **흑백**, 윤곽선 밖 저작권 문구·용지 크기 | — |
+| 양식 (실무 도면 형식) | 오른쪽 위: 표면 거칠기 일괄 지시 √Ra 3.2 (√Ra …) / 오른쪽 아래: 표제란 / 왼쪽 아래: 개정란(△ 번호) / 주서: 남는 자리 자동 | — |
+| 표제란 부품 행 | NO · DESCRIPTION · MATERIAL · QTY · SIZE(소재) · REMARKS(아노다이징 등 후처리 요약) | `finish`에서 자동 |
+| 표제란 표 | CLASS OF FINISH (소재면·Ra 12.5~0.8, ISO 1302 기호) · GENERAL TOL. ISO 2768-m (0.5~2000) · 로고 · DESIGNED/CHECKED/APPROVED · TITLE · UNIT · SCALE · MASS · PROJ.(3각법) · DWG NO.(개정) | `checked`, `approved`, `title` |
 | 선 | ISO 128-20 선 그룹 0.35 (외형선 0.35, 가는 선 0.18, 숨은선 02, 중심선 04), 윤곽선 0.7 | — |
 | 문자 | ISO 3098 (치수 3.5, 주서 3.0, 제목 5) | — |
 | 개정 이력 | 오른쪽 위 표 (개정·내용·날짜·작성) | `revisions` |
@@ -45,6 +45,7 @@ vX.Y/
 | `datums` | `A: {view, at, dx, dy}` — 형체 위 점과 기호 위치 |
 | `gdt` | `symbol`: flatness, straightness, circularity, cylindricity, profile_line, profile_surface, parallelism, perpendicularity, angularity, position, coaxiality, symmetry, runout / `tol: "Ø0.03"` / `datums: [A, B]` / `view, at, dx, dy` |
 | `roughness` | `{view, at, value: "Ra 0.8"}` |
+| `callouts` | 구멍·탭 지시: `{view, at(구멍 가장자리 점), text: "2-M3 탭 깊이 8" 또는 [여러 줄], dx, dy}` |
 | `notes` | 추가 주기 (탭, 접시, 마스킹 등) |
 | `revisions` | `[{rev, date, desc}]` 리비전 표 |
 
