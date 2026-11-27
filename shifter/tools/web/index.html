@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LSK H/SEQ Shifter 설정 — Sunggwan</title>
+<!-- LSK H/SEQ Shifter — 웹 설정 도구 (WebSerial, Chrome/Edge). 제작: Sunggwan. 펌웨어 0.6 프로토콜 (firmware/src/proto.h) -->
+<style>
+  :root { --fg:#111; --mut:#666; --line:#d4d4d4; --bg:#fff; --acc:#111; --bad:#b00020; --ok:#0a7a32; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.45 system-ui, "Malgun Gothic", "Noto Sans KR", sans-serif; color:var(--fg); background:var(--bg); }
+  header { display:flex; gap:12px; align-items:center; padding:12px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0; letter-spacing:.02em; }
+  header .dev { color:var(--mut); font-size:12px; }
+  button { font:inherit; padding:6px 12px; border:1px solid var(--fg); background:#fff; color:var(--fg); border-radius:4px; cursor:pointer; }
+  button.pri { background:var(--fg); color:#fff; }
+  button:disabled { opacity:.35; cursor:default; }
+  main { display:grid; grid-template-columns: minmax(320px, 420px) 1fr; gap:18px; padding:18px; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  section { border:1px solid var(--line); border-radius:6px; padding:14px; }
+  section h2 { font-size:13px; margin:0 0 10px; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); }
+  #gear { font-size:84px; font-weight:700; text-align:center; line-height:1; margin:6px 0 2px; font-variant-numeric:tabular-nums; }
+  #mode { text-align:center; color:var(--mut); }
+  canvas { width:100%; height:auto; display:block; margin-top:8px; }
+  .row { display:flex; justify-content:space-between; font-variant-numeric:tabular-nums; font-size:13px; padding:2px 0; }
+  .bad { color:var(--bad); } .ok { color:var(--ok); }
+  table { width:100%; border-collapse:collapse; }
+  td { padding:5px 4px; border-bottom:1px solid #eee; vertical-align:middle; }
+  td.k { font-family: ui-monospace, Consolas, monospace; white-space:nowrap; }
+  td.h { color:var(--mut); font-size:12px; }
+  input[type=number] { width:90px; font:inherit; padding:3px 5px; border:1px solid var(--line); border-radius:3px; }
+  input.dirty { border-color:var(--fg); }
+  .bar { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  #log { font:12px/1.4 ui-monospace, Consolas, monospace; white-space:pre-wrap; max-height:150px; overflow:auto; color:var(--mut); margin-top:10px; }
+  ol.cal { padding-left:18px; margin:0; } ol.cal li { margin:6px 0; }
+  ol.cal li.done { color:var(--mut); text-decoration:line-through; }
+  .note { color:var(--mut); font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>LSK H/SEQ Shifter</h1>
+  <span class="dev" id="dev">연결 안 됨</span>
+  <span style="flex:1"></span>
+  <button class="pri" id="btnConn">연결</button>
+  <button id="btnDemo">데모 (장치 없이)</button>
+</header>
+<main>
+  <div>
+    <section>
+      <h2>실시간</h2>
+      <div id="gear">–</div>
+      <div id="mode">—</div>
+      <canvas id="cv" width="760" height="560"></canvas>
+      <div class="row"><span>앞뒤 θ</span><span id="vth">–</span></div>
+      <div class="row"><span>좌우 φ</span><span id="vph">–</span></div>
+      <div class="row"><span>게이트</span><span id="vgate">–</span></div>
+      <div class="row"><span>센서</span><span id="vsens">–</span></div>
+      <div class="row"><span>측정 / 보고</span><span id="vhz">–</span></div>
+    </section>
+    <section style="margin-top:18px">
+      <h2>캘리브레이션</h2>
+      <ol class="cal" id="cal">
+        <li data-c="cal zero">3-4 게이트 중립에 두고 손을 뗀 뒤 → <button>중립 저장</button></li>
+        <li data-c="cal throw">앞(3단 방향) 스톱까지 밀고 잡은 채 → <button>앞 스톱</button></li>
+        <li data-c="cal gate 0">1-2 게이트 중립에 기대 두고 → <button>게이트 1-2</button></li>
+        <li data-c="cal gate 1">3-4 게이트 중립 → <button>게이트 3-4</button></li>
+        <li data-c="cal gate 2">5-6 게이트 중립 → <button>게이트 5-6</button></li>
+        <li data-c="cal gate 3">7-R 게이트 중립 → <button>게이트 7-R</button></li>
+        <li data-c="save">확인했으면 → <button class="pri">플래시에 저장</button></li>
+      </ol>
+      <p class="note">버튼만으로도 가능: 중립에서 캘리브레이션 버튼 → 1단에 넣고 다시 버튼.</p>
+    </section>
+  </div>
+  <div>
+    <section>
+      <h2>설정</h2>
+      <table id="tbl"><tr><td class="h">연결하면 장치에서 설정 목록을 읽어 옵니다.</td></tr></table>
+      <div class="bar">
+        <button class="pri" id="btnSave" disabled>저장 (플래시)</button>
+        <button id="btnLoad" disabled>되돌리기</button>
+        <button id="btnDefaults" disabled>기본값 (캘리브레이션 유지)</button>
+        <button id="btnBackup" disabled>백업 파일</button>
+        <label><button id="btnRestore" disabled>복원…</button><input type="file" id="file" accept=".json" hidden></label>
+        <button id="btnBoot" disabled>펌웨어 업데이트 모드</button>
+      </div>
+      <div id="log"></div>
+    </section>
+  </div>
+</main>
+<script>
+"use strict";
+const GATES = ["1-2", "3-4", "5-6", "7-R"];
+const gearName = g => g === 0 ? "N" : g === 8 ? "R" : String(g);
+const $ = id => document.getElementById(id);
+const log = m => { const l = $("log"); l.textContent = (m + "\n" + l.textContent).slice(0, 4000); };
+
+// ---------------- 전송: WebSerial 또는 데모 ----------------
+class SerialLink {
+  async open() {
+    this.port = await navigator.serial.requestPort({ filters: [{ usbVendorId: 0x2E8A }] });
+    await this.port.open({ baudRate: 115200 });
+    await this.port.setSignals({ dataTerminalReady: true });
+    this.writer = this.port.writable.getWriter();
+    this.enc = new TextEncoder();
+    this.readLoop();
+  }
+  async readLoop() {
+    const dec = new TextDecoder(); let buf = "";
+    const reader = this.port.readable.getReader();
+    try {
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let i;
+        while ((i = buf.indexOf("\n")) >= 0) { const ln = buf.slice(0, i).trim(); buf = buf.slice(i + 1); if (ln) this.onLine(ln); }
+      }
+    } catch (e) { log("연결 끊김: " + e.message); }
+    finally { reader.releaseLock(); setConnected(false); }
+  }
+  send(line) { return this.writer.write(this.enc.encode(line + "\n")); }
+}
+
+// 데모: 펌웨어 판정 로직(shifter_logic.h)을 JS로 옮긴 가상 장치
+class DemoLink {
+  async open() {
+    this.cfg = { layout:0, gear_on:9.5, gear_off:8, gate_hyst:1.2, gate0:15.26, gate1:0, gate2:-15.26, gate3:-28.61, seq_on:7, seq_off:3.5,
+      seq_swap:0, seq_pulse:0, k_p:1, k_r:1, zero_p:8192, zero_r:8192, axis_p:16, axis_r:32, f_mincut:4, f_beta:0.08, i2c_khz:400 };
+    this.saved = { ...this.cfg }; this.st = { gate:1, gear:0 }; this.hz = 0; this.t0 = performance.now();
+    this.timer = setInterval(() => this.tick(), 10);
+  }
+  keys() {
+    const K = (k, lo, hi, int, help) => ({ k, lo, hi, int, help });
+    return [K("layout",0,1,1,"0 표준 / 1 도그레그"), K("gear_on",3,13.5,0,"기어 들어감 판정 각도 (deg)"), K("gear_off",2,13,0,"기어 빠짐 판정 각도"),
+      K("gate_hyst",0,6,0,"게이트 히스테리시스"), K("gate0",-45,45,0,"1-2 게이트 좌우 각도"), K("gate1",-45,45,0,"3-4 게이트"), K("gate2",-45,45,0,"5-6 게이트"),
+      K("gate3",-45,45,0,"7-R 게이트"), K("seq_on",2,7.9,0,"시퀀셜 판정 각도"), K("seq_off",0.5,7,0,"시퀀셜 해제 각도"), K("seq_swap",0,1,1,"밀기/당기기 반전"),
+      K("seq_pulse",0,500,1,"시퀀셜 펄스 ms (0 = 유지)"), K("k_p",-5,5,0,"앞뒤 배율"), K("k_r",-5,5,0,"좌우 배율"), K("zero_p",0,16383,1,"앞뒤 중립 raw"),
+      K("zero_r",0,16383,1,"좌우 중립 raw"), K("axis_p",5,45,0,"X축 범위 ±deg"), K("axis_r",5,60,0,"Y축 범위 ±deg"), K("f_mincut",0.5,50,0,"필터 최소 차단 Hz"),
+      K("f_beta",0,2,0,"필터 속도 계수"), K("i2c_khz",100,1000,1,"I2C kHz")];
+  }
+  pose(t) {    // 가상 손: 1 → 2 → 3 → 4 → 5 → 6 → 7 → R 순서로 천천히
+    const seq = [[0,1],[0,-1],[1,1],[1,-1],[2,1],[2,-1],[3,1],[3,-1]];
+    const T = 2.4, k = Math.floor(t / T) % 8, u = (t % T) / T;
+    const [g, dir] = seq[k], ph = [15.26, 0, -15.26, -28.61][g];
+    const env = u < .25 ? u / .25 : u < .6 ? 1 : u < .85 ? 1 - (u - .6) / .25 : 0;
+    const side = u < .25 ? Math.min(1, u / .12) : u > .85 ? 1 - (u - .85) / .15 : 1;
+    return { th: dir * 14 * Math.sin(env * Math.PI / 2) + (Math.random() - .5) * .04, ph: ph * side + (Math.random() - .5) * .04 };
+  }
+  tick() {
+    const t = (performance.now() - this.t0) / 1000, p = this.pose(t), c = this.cfg, s = this.st;
+    const G = [c.gate0, c.gate1, c.gate2, c.gate3];
+    if (s.gear === 0) {
+      let best = 0; G.forEach((g, i) => { if (Math.abs(p.ph - g) < Math.abs(p.ph - G[best])) best = i; });
+      if (best !== s.gate && Math.abs(p.ph - (G[best] + G[s.gate]) / 2) >= c.gate_hyst) s.gate = best;
+      if (Math.abs(p.th) > c.gear_on) s.gear = [[[1,2],[3,4],[5,6],[7,8]], [[8,1],[2,3],[4,5],[6,7]]][c.layout][s.gate][p.th > 0 ? 0 : 1];
+    } else if (Math.abs(p.th) < c.gear_off) s.gear = 0;
+    this.live = { t: Math.round(t * 1000), th: p.th, ph: p.ph, gate: s.gate, gear: s.gear, mode: "H", latch: 0,
+                  raw: [8192, 8192], ok: [1, 1], err: [0, 0], hz: [1000, 2000] };
+    if (this.hz && (!this.last || t - this.last >= 1 / this.hz)) { this.last = t; this.onLine(JSON.stringify({ s: this.live })); }
+  }
+  send(line) {
+    const [cmd, a, b] = line.trim().split(/\s+/), c = this.cfg, L = this.live || { th: 0, ph: 0 };
+    let r = { ok: true };
+    if (cmd === "info") r = { ok: true, product: "LSK HSEQ Shifter (데모)", fw: "0.6.0-demo", maker: "Sunggwan", proto: 1, sensor: "MT6701", cpr: 16384, keys: 21 };
+    else if (cmd === "get") r = { ok: true, cfg: { ...c } };
+    else if (cmd === "keys") r = { ok: true, keys: this.keys() };
+    else if (cmd === "set") { const k = this.keys().find(x => x.k === a), v = Number(b);
+      if (!k) r = { ok: false, err: "없는 키" }; else if (!(v >= k.lo && v <= k.hi)) r = { ok: false, err: "범위 밖" };
+      else { const n = { ...c, [a]: k.int ? Math.round(v) : v };
+        if (n.gear_off >= n.gear_on || n.seq_off >= n.seq_on) r = { ok: false, err: "관계 오류 (off < on)" }; else { this.cfg = n; r = { ok: true, [a]: n[a] }; } } }
+    else if (cmd === "save") this.saved = { ...c };
+    else if (cmd === "load") this.cfg = { ...this.saved };
+    else if (cmd === "defaults") { const keep = ["zero_p","zero_r","k_p","k_r","gate0","gate1","gate2","gate3"]; const d = new DemoLink(); d.open(); clearInterval(d.timer);
+      keep.forEach(k => d.cfg[k] = c[k]); this.cfg = d.cfg; }
+    else if (cmd === "stream") this.hz = Number(a) || 0;
+    else if (cmd === "cal") {
+      if (a === "gate") { if (Math.abs(L.th) > 4) r = { ok: false, err: "중립(앞뒤 ±4° 안)에서 하세요" }; else { c["gate" + b] = +L.ph.toFixed(3); r = { ok: true, ["gate" + b]: c["gate" + b] }; } }
+      else if (a === "throw" && Math.abs(L.th) < 7) r = { ok: false, err: "앞 스톱까지 밀고 하세요" };
+    }
+    else if (cmd === "bootsel" || cmd === "reboot") r = { ok: true };
+    else r = { ok: false, err: "모르는 명령" };
+    setTimeout(() => this.onLine(JSON.stringify(r)), 5);
+    return Promise.resolve();
+  }
+}
+
+// ---------------- 명령 / 응답 ----------------
+let link = null, pending = [], keys = [], cfg = {};
+function onLine(ln) {
+  let j; try { j = JSON.parse(ln); } catch { return; }
+  if (j.s) return showLive(j.s);
+  if (j.cal) return log("[버튼 캘리브레이션] " + JSON.stringify(j));
+  if ("ok" in j && pending.length) { const p = pending.shift(); clearTimeout(p.to); j.ok ? p.res(j) : p.rej(new Error(j.err)); }
+}
+function cmd(line, timeout = 2000) {
+  return new Promise((res, rej) => {
+    const p = { res, rej }; p.to = setTimeout(() => { pending.splice(pending.indexOf(p), 1); rej(new Error("응답 없음: " + line)); }, timeout);
+    pending.push(p); link.send(line);
+  });
+}
+async function run(line) { try { const r = await cmd(line); log("✓ " + line + "  " + JSON.stringify(r)); return r; } catch (e) { log("✗ " + line + "  " + e.message); throw e; } }
+
+// ---------------- 화면 ----------------
+const cv = $("cv"), ctx = cv.getContext("2d"), trail = [];
+function showLive(s) {
+  $("gear").textContent = s.mode === "SEQ" ? (s.latch > 0 ? "+" : s.latch < 0 ? "−" : "S") : gearName(s.gear);
+  $("mode").textContent = s.mode === "SEQ" ? "시퀀셜" : (cfg.layout ? "H · 도그레그" : "H · 표준");
+  $("vth").textContent = s.th.toFixed(2) + "°"; $("vph").textContent = s.ph.toFixed(2) + "°";
+  $("vgate").textContent = GATES[s.gate];
+  const ok = s.ok[0] && s.ok[1];
+  $("vsens").innerHTML = ok ? `<span class="ok">정상</span> (누적 오류 ${s.err[0]} / ${s.err[1]})` : `<span class="bad">오류 앞뒤 ${s.ok[0] ? "OK" : "✗"} · 좌우 ${s.ok[1] ? "OK" : "✗"}</span>`;
+  $("vhz").textContent = `${s.hz[1]} Hz / ${s.hz[0]} Hz`;
+  trail.push([s.ph, s.th]); if (trail.length > 60) trail.shift();
+  draw(s);
+}
+function draw(s) {
+  const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2;
+  const sx = -W / 2 / 38, sy = -H / 2 / 18;          // φ +는 왼쪽, θ +는 앞(위)
+  const X = ph => cx + ph * sx, Y = th => cy + th * sy;
+  ctx.clearRect(0, 0, W, H); ctx.lineCap = "round";
+  const G = [cfg.gate0 ?? 15.26, cfg.gate1 ?? 0, cfg.gate2 ?? -15.26, cfg.gate3 ?? -28.61];
+  ctx.strokeStyle = "#e4e4e4"; ctx.lineWidth = 28;
+  ctx.beginPath(); ctx.moveTo(X(Math.max(...G)), cy); ctx.lineTo(X(Math.min(...G)), cy); ctx.stroke();
+  G.forEach(g => { ctx.beginPath(); ctx.moveTo(X(g), Y(14)); ctx.lineTo(X(g), Y(-14)); ctx.stroke(); });
+  ctx.strokeStyle = "#999"; ctx.lineWidth = 1; ctx.setLineDash([6, 5]);
+  const on = cfg.gear_on ?? 9.5;
+  [on, -on].forEach(t => { ctx.beginPath(); ctx.moveTo(30, Y(t)); ctx.lineTo(W - 30, Y(t)); ctx.stroke(); });
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#111"; ctx.font = "bold 26px system-ui"; ctx.textAlign = "center";
+  const M = [[[1,2],[3,4],[5,6],[7,8]], [[8,1],[2,3],[4,5],[6,7]]][cfg.layout || 0];
+  G.forEach((g, i) => { ctx.fillText(gearName(M[i][0]), X(g), Y(14) - 22); ctx.fillText(gearName(M[i][1]), X(g), Y(-14) + 42); });
+  ctx.strokeStyle = "#bbb"; ctx.lineWidth = 2; ctx.beginPath();
+  trail.forEach(([p, t], i) => i ? ctx.lineTo(X(p), Y(t)) : ctx.moveTo(X(p), Y(t))); ctx.stroke();
+  ctx.fillStyle = "#111"; ctx.beginPath(); ctx.arc(X(s.ph), Y(s.th), 11, 0, 7); ctx.fill();
+}
+
+function buildTable() {
+  const t = $("tbl"); t.innerHTML = "";
+  keys.forEach(k => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="k">${k.k}</td><td><input type="number" step="${k.int ? 1 : "any"}" min="${k.lo}" max="${k.hi}" value="${cfg[k.k]}"></td><td class="h">${k.help} <span style="opacity:.7">(${k.lo} ~ ${k.hi})</span></td>`;
+    const inp = tr.querySelector("input");
+    inp.addEventListener("input", () => inp.classList.add("dirty"));
+    inp.addEventListener("change", async () => {
+      try { const r = await run(`set ${k.k} ${inp.value}`); cfg[k.k] = r[k.k]; inp.value = r[k.k]; inp.classList.remove("dirty"); }
+      catch { inp.value = cfg[k.k]; inp.classList.remove("dirty"); }
+    });
+    t.appendChild(tr);
+  });
+}
+async function refresh() { cfg = (await cmd("get")).cfg; buildTable(); }
+
+function setConnected(on) {
+  ["btnSave","btnLoad","btnDefaults","btnBackup","btnRestore","btnBoot"].forEach(id => $(id).disabled = !on);
+  $("btnConn").disabled = $("btnDemo").disabled = on;
+  if (!on) { $("dev").textContent = "연결 안 됨"; link = null; pending = []; }
+}
+async function start(l) {
+  link = l; link.onLine = onLine;
+  await link.open();
+  const i = await cmd("info");
+  if (i.proto !== 1) log("⚠ 프로토콜 버전 다름: " + i.proto);
+  $("dev").textContent = `${i.product} · fw ${i.fw} · ${i.sensor} · 제작 ${i.maker}`;
+  keys = (await cmd("keys")).keys;
+  await refresh();
+  await cmd("stream 60");
+  setConnected(true);
+}
+
+$("btnConn").onclick = async () => {
+  if (!("serial" in navigator)) { alert("이 브라우저는 WebSerial을 지원하지 않습니다 — Chrome 또는 Edge (데스크톱)에서 여세요."); return; }
+  try { await start(new SerialLink()); } catch (e) { log("연결 실패: " + e.message); }
+};
+$("btnDemo").onclick = () => start(new DemoLink());
+$("btnSave").onclick = () => run("save");
+$("btnLoad").onclick = async () => { await run("load"); await refresh(); };
+$("btnDefaults").onclick = async () => { if (confirm("판정·출력 설정을 기본값으로? (캘리브레이션은 유지, 저장은 따로)")) { await run("defaults"); await refresh(); } };
+$("btnBackup").onclick = async () => {
+  const info = await cmd("info"), c = (await cmd("get")).cfg;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ device: info, cfg: c }, null, 1)], { type: "application/json" }));
+  a.download = `lsk_shifter_${new Date().toISOString().slice(0, 10)}.json`; a.click();
+};
+$("btnRestore").onclick = () => $("file").click();
+$("file").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const c = JSON.parse(await f.text()).cfg;
+  const order = Object.keys(c).sort((a, b) => (a.endsWith("_off") ? 0 : a.endsWith("_on") ? 1 : 2) - (b.endsWith("_off") ? 0 : b.endsWith("_on") ? 1 : 2));
+  for (const k of order) { try { await cmd(`set ${k} ${c[k]}`); } catch (err) { log(`✗ ${k}: ${err.message}`); } }
+  await refresh(); log("복원 완료 — '저장'을 눌러야 유지됩니다");
+};
+$("btnBoot").onclick = async () => {
+  if (!confirm("펌웨어 업데이트 모드로 재부팅합니다. RPI-RP2 드라이브가 뜨면 .uf2 파일을 복사하세요.")) return;
+  try { await cmd("bootsel", 500); } catch {}
+  log("RPI-RP2 드라이브에 firmware/bin/*.uf2를 복사하세요");
+};
+document.querySelectorAll("#cal li").forEach(li => li.querySelector("button").onclick = async () => {
+  if (!link) return alert("먼저 연결하세요");
+  try { await run(li.dataset.c); li.classList.add("done"); await refresh(); } catch {}
+});
+draw({ th: 0, ph: 0 });
+</script>
+</body>
+</html>

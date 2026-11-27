@@ -1,5 +1,5 @@
 # LSK H/SEQ Shifter — author: Sunggwan
-"""v0.4 interference check — all pairs at every pose."""
+"""v0.6 interference check — all pairs at every pose (exterior included)."""
 import itertools, math, time, pickle, os
 import numpy as np
 from build123d import *
@@ -11,6 +11,7 @@ TH, PSI, _ = camgen.target_path(camgen.H_PROFILE)
 IGNORE = {frozenset(p) for p in [
     ("plunger_S1_L", "tail_bolt"), ("plunger_S1_R", "tail_bolt"), ("plunger_S2", "tail_bolt"),
     ("hollow_pin", "cradle"), ("hollow_pin", "pin_collar"),
+    ("lever_bar", "sleeve"), ("sleeve", "lock_nut"), ("sleeve", "knob"), ("lock_nut", "knob"), ("lever_bar", "boot_collar"),
 ]}
 
 

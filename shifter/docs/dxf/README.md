@@ -1,14 +1,14 @@
 # 도면 (DXF) — 제작: Sunggwan
 
-리비전별 폴더: `v0.5/` …  각 폴더 구성
+리비전별 폴더: `v0.5/`, `v0.6/` …  각 폴더 구성
 ```
 vX.Y/
   specs/*.yaml   ← 원본. 치수·공차·기하공차·후처리를 여기에 적는다
-  *.dxf          A4 가로 흑백 도면 (CAD에서 열기, 글꼴 맑은 고딕, 원·원호는 CIRCLE/ARC 실제 곡선)
+  *.dxf          A4 가로 흑백 도면 (큰 판재는 A3 가로) (CAD에서 열기, 글꼴 맑은 고딕, 원·원호는 CIRCLE/ARC 실제 곡선)
   pdf/ png/      미리보기
   INDEX.md       도면 목록
 ```
-재생성: `cd shifter/src && python3 export.py && python3 make_drawings.py --version v0.5` (한 장만: 뒤에 YAML 경로)
+재생성: `cd shifter/src && python3 export.py && python3 make_drawings.py --version v0.6` (한 장만: 뒤에 YAML 경로)
 
 형상은 `CAD/vX.Y/mach/…/<품번>_<부품>.step`(export.py 산출물)을 읽어 은선 처리한다 — 메시(STL)는 쓰지 않는다.
 날카로운 모서리와 윤곽선만 그리고, 접선(매끄럽게 이어지는) 모서리·이음선은 그리지 않는다 (ISO 128).
@@ -23,7 +23,7 @@ vX.Y/
 | 모서리 | ISO 13715 | 주기 2 |
 | 표면 거칠기 | ISO 21920 (기호 ISO 1302) | 주기 3 + 개별 기호 |
 | 투상 / 척도 | 3각법 ISO 128-30 · 기호 ISO 5456-2 / ISO 5455 (5:1, 2:1, 1:1, 1:2 …) | 추가 정보란 |
-| 용지·윤곽 | **A4 가로**, 윤곽선(0.7) 사방 10mm + 중심 마크, 구역 표시 없음, **흑백**, 윤곽선 밖 저작권 문구·용지 크기 | — |
+| 용지·윤곽 | **A4 가로** (YAML `paper: A3` → A3 가로, 큰 판재 부품), 윤곽선(0.7) 사방 10mm + 중심 마크, 구역 표시 없음, **흑백**, 윤곽선 밖 저작권 문구·용지 크기 | — |
 | 양식 (실무 도면 형식) | 오른쪽 위: 표면 거칠기 일괄 지시 √Ra 3.2 (√Ra …) / 오른쪽 아래: 표제란 / 왼쪽 아래: 개정란(△ 번호) / 주서: 남는 자리 자동 | — |
 | 표제란 부품 행 | NO · DESCRIPTION · MATERIAL · QTY · SIZE(소재) · REMARKS(아노다이징 등 후처리 요약) | `finish`에서 자동 |
 | 표제란 표 | CLASS OF FINISH (소재면·Ra 12.5~0.8, ISO 1302 기호) · GENERAL TOL. ISO 2768-m (0.5~2000) · 로고 · DESIGNED/CHECKED/APPROVED · TITLE · UNIT · SCALE · MASS · PROJ.(3각법) · DWG NO.(개정) | `checked`, `approved`, `title` |
@@ -35,7 +35,7 @@ vX.Y/
 | 키 | 내용 |
 |---|---|
 | `part`, `part_no`, `name`, `material`, `stock`, `process`, `rev` | 표제란. `part`는 `src/make_drawings.py`의 형상 이름 |
-| `views`, `hidden_views`, `scale` | 투상도 (기본 front/top/right), 숨은선 표시할 투상도 (기본 front), 척도 (없으면 ISO 5455에서 A4에 맞는 가장 큰 값) |
+| `views`, `hidden_views`, `scale` | 투상도 (기본 front/top/right), 숨은선 표시할 투상도 (기본 front), 척도 (없으면 ISO 5455에서 용지에 맞는 가장 큰 값) |
 | `source` | (선택) 다른 STEP 사용 — `shifter/` 기준 경로. 없으면 `CAD/<버전>/`에서 품번으로 찾음 |
 | `dept`, `approved`, `status`, `doc_type` | (선택) 표제란 책임 부서·승인자·문서 상태·문서 종류 |
 | `general_tolerance`, `edges`, `roughness_default` | 기본 ISO 2768-mK / ISO 13715 −0.3·+0.3 / Ra 3.2 |
@@ -47,6 +47,10 @@ vX.Y/
 | `roughness` | `{view, at, value: "Ra 0.8"}` |
 | `callouts` | 구멍·탭 지시: `{view, at(구멍 가장자리 점), text: "2-M3 탭 깊이 8" 또는 [여러 줄], dx, dy}` |
 | `notes` | 추가 주기 (탭, 접시, 마스킹 등) |
+| `change` | (선택) 이전 버전 대비 바뀐 점 — `INDEX.md`의 `변경` 칸 (없으면 이전 버전과 형상 같음) |
+| `paper` | (선택) `A3` → A3 가로 (기본 A4). 큰 판재 부품용 |
 | `revisions` | `[{rev, date, desc}]` 리비전 표 |
+
+⚠ YAML에서 ` #`은 주석 시작 — `#120` 같은 글자가 들어간 항목은 큰따옴표로 감쌀 것 (v0.5 도면은 이 때문에 블라스트 입도가 빠져 있음).
 
 좌표는 모두 **조립 좌표계(mm)** — X 앞, Y 왼쪽, Z 위. 정면도 XZ, 평면도 XY, 우측면도 YZ. `CAD/vX.Y/assembly`의 조립 STEP에서 그대로 읽을 수 있다.

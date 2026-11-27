@@ -1,0 +1,26 @@
+part: eccentric
+part_no: LSK-SH-M6-02
+name: 모드 편심 캠
+material: Al 6061-T6
+stock: Ø14 봉 또는 10t 판재
+process: CNC (판재 윤곽) / 선반
+rev: D
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
+  - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
+  - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
+finish:
+  - 바리 제거, 외경 모서리 C0.3
+  - 하드 아노다이징 Type III 25µm 또는 무처리 + 그리스
+dims:
+  - {view: right, type: diameter, center: [6, 13.3, -66.5], r: 5.5, fit: h9, angle: 210}
+  - {view: right, type: diameter, center: [6, 13.3, -63.5], r: 2.5, fit: H7, angle: 30}
+  - {view: right, type: linear, p1: [6, 13.3, -66.5], p2: [6, 13.3, -63.5], dir: v, side: right, tol: "±0.02"}
+datums:
+  A: {view: right, at: [6, 15.07, -61.73], dx: 12, dy: 8}
+gdt:
+  - {view: front, at: [6, 13.3, -61], symbol: parallelism, tol: "Ø0.02", datums: [A], dx: -40, dy: 14}
+notes:
+  - "편심량 3 ±0.02 → 잠금 암 리프트 6 (H: 바닥, SEQ: 180° 회전, 양 끝 사점 자기 고정)"
+  - "반경 방향 M3 무두볼트 탭 ×1 (Ø5 축 고정)"

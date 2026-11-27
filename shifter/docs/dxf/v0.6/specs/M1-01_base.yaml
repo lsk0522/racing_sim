@@ -1,0 +1,43 @@
+part: base
+part_no: LSK-SH-M1-01
+name: 베이스 (리빌 홈)
+material: Al 6061-T6
+stock: 8t 판재 135×125
+process: CNC 2.5D 양면 (윗면 → 뒤집어 바닥 포켓)
+views: [front, top]
+hidden_views: [top]
+rev: F
+paper: A3
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
+  - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
+  - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
+  - {rev: E, date: 2026-11-27, desc: "v0.6: 외곽·리빌 홈·포켓"}
+  - {rev: F, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.3, 바닥 외곽 C0.8
+  - "비드 블라스트 #120"
+  - 그래파이트 아노다이징 Type II 8~12µm (ISO 7599) — 사이드 패널·게이트와 같은 색
+  - 아노다이징 후 바닥 C0.8 재가공 → 가공면 노출 (광택 대비)
+dims:
+  - {view: top, type: linear, p1: [-84, -67.5, -66], p2: [46, -67.5, -66], dir: h, side: below, tol: "±0.1"}
+  - {view: top, type: linear, p1: [46, -67.5, -66], p2: [46, 51, -66], dir: v, side: right, tol: "±0.1"}
+  - {view: top, type: linear, p1: [-70, -53, -66], p2: [26, -53, -66], dir: h, side: below, tol: "±0.05"}
+  - {view: top, type: linear, p1: [-70, -53, -66], p2: [-70, 31, -66], dir: v, side: left, tol: "±0.05"}
+  - {view: top, type: linear, p1: [-72, -24, -66], p2: [-28, -24, -66], dir: h, side: above, tol: "±0.1"}
+  - {view: top, type: linear, p1: [-77, 39, -66], p2: [39, 32, -66], dir: h, side: above, tol: "±0.1"}
+  - {view: front, type: linear, p1: [46, 0, -74], p2: [46, 0, -66], dir: v, side: right, tol: "±0.1"}
+datums:
+  A: {view: front, at: [30, 0, -66], dx: 22, dy: 6}
+gdt:
+  - {view: front, at: [10, 0, -66], symbol: flatness, tol: "0.05", dx: 6, dy: 12}
+  - {view: top, at: [28.2, 31, -66], symbol: position, tol: "Ø0.05", datums: [A], dx: 16, dy: 14}
+notes:
+  - "외곽 130×118.5 모서리 R2.5, 윗면 바깥 리빌 홈 1×1 (몸체–베이스 섀도우 갭), 바닥 외곽 C0.8"
+  - "타워 고정 4×Ø4.4 관통 + 바닥면 90° 접시 Ø8.8 (M4 접시머리) — 위치도 4구멍 공통"
+  - "카세트 4×Ø3.4 관통 + 바닥 접시, 커버 보스 4×Ø3.4 관통 + 바닥 접시 (앞 X 39 / Y −40·32, 뒤 X −77 / Y −10·39)"
+  - "바닥면: RP2040 포켓 34×26 깊이 5 (X −80~−46, 뒤 중앙), USB-C 슬롯 12 폭 깊이 4.5 + 뒷면 가이드 홈 17×6.5 깊이 1, 케이블 홈 깊이 3"
+  - "바닥면: M6 탭 4× 깊이 6 (40mm 간격, 리그·어댑터 판), 코너 M3 탭 4× 깊이 6 (바닥 커버), X −79.5 / 41.5 · Y −63 / 46.5"
+  - "SEQ 잠금 피벗 4×M3 탭 깊이 6 (윗면), 편심 릴리프 10×14 깊이 6.5 (윗면), 앞쪽 모드 노브 디시 R22 (커버와 같은 구면)"
+change: "외곽·리빌 홈·포켓 위치·커버 보스·코너 탭·디시"

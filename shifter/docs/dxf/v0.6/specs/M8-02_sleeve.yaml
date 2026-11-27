@@ -1,0 +1,35 @@
+part: sleeve
+part_no: LSK-SH-M8-02
+name: 노브 슬리브 Ø12
+material: SUS303
+stock: Ø20 봉 50
+process: 선반 (외경·나사·보어) + 측면 탭
+views: [front, top]
+hidden_views: [front]
+rev: A
+revisions:
+  - {rev: A, date: 2026-11-27, desc: "v0.6 최초 발행"}
+roughness_default: Ra 1.6
+finish:
+  - 바리 제거, 양 끝 C0.5, 나사 시작부 C1 (45°)
+  - "SUS303 무처리 (비드 블라스트 #180 선택) / 6061이면 그래파이트 아노다이징 Type II — 나사부 마스킹"
+dims:
+  - {view: front, type: linear, p1: [6, 0, 72], p2: [6, 0, 108], dir: v, side: right, tol: "±0.1"}
+  - {view: front, type: linear, p1: [6, 0, 85], p2: [6, 0, 108], dir: v, side: right, offset: 18, tol: "±0.2"}
+  - {view: front, type: linear, p1: [-6, 0, 72], p2: [-6, 0, 88], dir: v, side: left, tol: "±0.2"}
+  - {view: front, type: linear, p1: [-6, 0, 78], p2: [6, 0, 78], dir: h, side: below, dia: true, tol: "±0.05"}
+  - {view: front, type: linear, p1: [-6, 0, 100], p2: [6, 0, 100], dir: h, side: above, text: "M12×1.25-6g"}
+  - {view: top, type: diameter, center: [0, 0, 108], r: 4.0, fit: N7, angle: 45}
+datums:
+  A: {view: front, at: [-4, 0, 72], dx: -10, dy: -9}
+gdt:
+  - {view: front, at: [6, 0, 96], symbol: coaxiality, tol: "Ø0.03", datums: [A], dx: 14, dy: 6}
+  - {view: front, at: [6, 0, 76], symbol: runout, tol: "0.03", datums: [A], dx: 14, dy: -8}
+callouts:
+  - {view: front, at: [-6, 0, 88], text: ["M3 탭 (뒤쪽 −X)", "무두볼트 M3×4"], dx: -22, dy: 10}
+notes:
+  - "재질 SUS303 권장 (Al 6061-T6 가능 — 나사부 마모 주의)"
+  - "보어 Ø8 N7 관통 — 레버 Ø8 h6에 가벼운 압입 + 고정제 (록타이트 638 등), 레버 위치 72~108"
+  - "M12×1.25-6g 외나사 85~108 (23) — 테이퍼 록너트(M8-03) + 노브(M8-01 또는 시판 M12×1.25)"
+  - "측면 M3 탭 ×1 (뒤쪽 −X, 아래 끝에서 16 = 레버 88) — 무두볼트 M3×4 콘 포인트, 록너트로 가려짐. 레버에 드릴 포인트 Ø3 깊이 0.5 (선택)"
+change: "신규 (v0.6 레버·노브)"
