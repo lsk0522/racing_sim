@@ -1,0 +1,74 @@
+part: seq_lock
+part_no: LSK-SH-M6-01
+name: 시퀀셜 잠금 암
+material: Al 6061-T6
+stock: 10t 판재 55×30
+process: CNC 3축 2면
+rev: F
+revisions:
+- {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+- {rev: B, date: 2026-11-27, desc: 'A4, 매끄러운 STEP'}
+- {rev: C, date: 2026-11-27, desc: 'A4 가로, KS 양식, 흑백'}
+- {rev: D, date: 2026-11-27, desc: 표제란·공차표·거칠기표 양식}
+- {rev: E, date: 2026-11-27, desc: 아노다이징 제외 (무처리·블라스트)}
+- {rev: F, date: '2026-11-27', desc: 'v0.7 좌우 반전, 옆 탭 R10.9 원호, 옆면 릴리프'}
+remarks: 무처리 · 그리스
+finish: ['바리 제거, 포켓 윗모서리 R0.3', '표면처리 없음 — 포켓·스톱면에 그리스, 마모 관찰 (닳으면 이 부품만 재가공)']
+dims:
+- view: top
+  type: linear
+  p1: [0, 5.3, -56]
+  p2: [0, -5.3, -56]
+  dir: v
+  side: right
+  tol: +0.1/0
+- view: top
+  type: linear
+  p1: [-30, 0, -56]
+  p2: [-11, 0, -56]
+  dir: h
+  side: below
+  tol: ±0.05
+- view: top
+  type: linear
+  p1: [-30, 0, -56]
+  p2: [13.2, 0, -56]
+  dir: h
+  side: below
+  tol: ±0.05
+- view: front
+  type: linear
+  p1: [0, 8.3, -62.5]
+  p2: [0, 8.3, -56]
+  dir: v
+  side: right
+  tol: +0.1/0
+- view: front
+  type: diameter
+  center: [-30, 8.3, -60]
+  r: 1.5
+  fit: H8
+  angle: 135
+datums:
+  A:
+    view: front
+    at: [-31.06, 8.3, -61.06]
+    dx: -10
+    dy: -10
+gdt:
+- view: top
+  at: [13.2, -2, -56]
+  symbol: position
+  tol: '0.05'
+  datums: [A]
+  dx: 16
+  dy: -14
+notes: ['포켓 길이 비대칭 (피벗 쪽 11.0 / 앞쪽 13.2): 들어 올릴 때 기울기를 보정해 양쪽 모두 ±8°에서 정지', '피벗 Ø3 H8 — Ø3 다웰핀(m6) (모델 Ø3.2는 대표 형상, 도면 우선)', '옆 탭 아랫면 = 볼록 원호 R10.9 (꼭짓점 X 1, Z −61) — 편심이 받치는 면, Ra 0.8. H·SEQ 모두 원호 위 한
+    점으로 닿음 (평면이면 SEQ에서 모서리가 편심에 0.4 파고듦)', '몸통 −Y 옆면 아래 릴리프 깊이 1 (X −3~7, Z −66~−62.5) — H 위치 편심 원판과 틈 0.7. 이 옆면이 모드 노브 반대 방향 회전 스톱 (사점 지나 약 14°)']
+change: 좌우(Y) 반전 + 옆 탭 아랫면 R10.9 원호, −Y 옆면 아래 릴리프
+callouts:
+- view: front
+  at: [1.0, -12.0, -61.0]
+  text: [탭 아랫면 R10.9, 꼭짓점 X 1 / Z −61]
+  dx: 26
+  dy: -20

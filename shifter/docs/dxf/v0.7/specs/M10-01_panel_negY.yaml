@@ -1,0 +1,133 @@
+part: panel_negY
+part_no: LSK-SH-M10-01
+name: 사이드 패널 −Y (렌치 구멍)
+material: Al 6061-T6
+stock: 3t 판재 135×128
+process: CNC 2.5D (판재) — 외곽·관통 → 바깥면 필드 포켓 → 챔퍼, 블라스트 후 챔퍼 재가공
+views: [front, top]
+hidden_views: []
+rev: D
+paper: A3
+revisions:
+- {rev: A, date: 2026-11-27, desc: v0.6 최초 발행}
+- {rev: B, date: 2026-11-27, desc: A3 가로 (큰 판재)}
+- {rev: C, date: 2026-11-27, desc: 아노다이징 제외 (무처리·블라스트)}
+- {rev: D, date: '2026-11-27', desc: v0.7 좌우 반전 (운전석 +X 표준 7+R)}
+roughness_default: Ra 1.6
+remarks: 무처리 · 블라스트
+finish: ['바리 제거, 지시 없는 모서리 ISO 13715 −0.2', '비드 블라스트 #180 (바깥면 전체)', '블라스트 후 챔퍼 재가공 (외곽 C1.2, 필드·메달리온 테두리 C0.5, Ø6 구멍 C0.5) → 가공면 노출', (선택) 무광 투명 클리어 코트 — 지문·산화 방지 (아노다이징 안 함)]
+dims:
+- view: front
+  type: linear
+  p1: [-84, -51.0, -66]
+  p2: [46, -51.0, -66]
+  dir: h
+  side: below
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [46, -51.0, -66]
+  p2: [46, -51.0, 57]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [-38.12, -51.0, 57]
+  p2: [38, -51.0, 57]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [-84, -51.0, -66]
+  p2: [-84, -51.0, -10.77]
+  dir: v
+  side: left
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [0, -51.0, -66]
+  p2: [0, -51.0, 0]
+  dir: v
+  side: left
+  tol: ±0.05
+- view: front
+  type: linear
+  p1: [0, -51.0, 0]
+  p2: [46, -51.0, 0]
+  dir: h
+  side: above
+  tol: ±0.05
+- view: front
+  type: diameter
+  center: [0, -51.0, 0]
+  r: 15.0
+  angle: 135
+- view: front
+  type: linear
+  p1: [-78.5, -51.0, -60.5]
+  p2: [40.5, -51.0, -60.5]
+  dir: h
+  side: below
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [40.5, -51.0, -60.5]
+  p2: [40.5, -51.0, 36]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: front
+  type: diameter
+  center: [0, -51.0, -34]
+  r: 3.0
+  angle: 45
+- view: top
+  type: linear
+  p1: [0, -48, 0]
+  p2: [0, -51, 0]
+  dir: v
+  side: right
+  tol: ±0.1
+datums:
+  A:
+    view: front
+    at: [-60, -51.0, -66]
+    dx: 0
+    dy: 12
+  B:
+    view: front
+    at: [46, -51.0, 20]
+    dx: -12
+    dy: 0
+gdt:
+- view: front
+  at: [40.5, -51.0, -58.8]
+  symbol: position
+  tol: Ø0.1
+  datums: [A, B]
+  dx: -60
+  dy: 40
+- view: top
+  at: [-20, -51.0, 0]
+  symbol: flatness
+  tol: '0.1'
+  dx: 10
+  dy: -8
+roughness:
+- view: front
+  at: [-30, -51.0, -20]
+  value: Ra 0.8
+  dx: 8
+  dy: -16
+callouts:
+- view: front
+  at: [41.7, -51, -59.3]
+  text: [4-Ø3.4 관통, 90° 접시 Ø6.3 (M3)]
+  dx: 16
+  dy: -20
+notes: ['바깥면: 외곽에서 10mm 프레임만 남기고 오목 필드 깊이 0.8 (모서리 R3), 피벗 중심 Ø30 메달리온은 원래 면 높이로 남김, 중심 표시 Ø2 깊이 0.3', '필드 바닥 Ra 0.8 (블라스트 전 평탄 — 빛 반사 균일), 필드·메달리온 테두리 C0.5', '4×Ø3.4 관통 + 바깥면 90° 접시 Ø6.3 (M3 접시머리 → 커버
+    보스 인서트), 머리는 면에서 0.1 들어감 — 앞 X 40.5 / Z −60.5·36, 뒤 X −78.5 / Z −60.5, 뒤 경사면 (−54.55, 22.92)', 'Ø6 관통 (X 0, Z −34) + 바깥 C0.5 — 7·R 예압 나사 육각 렌치 접근', '좌표 원점 = 피벗 축 (메달리온 중심), Z −66 = 베이스 윗면, 패널 아래 끝은
+    베이스 리빌 홈 위에 맞춤']
+change: 좌우(Y) 반전 — M10-02 거울상

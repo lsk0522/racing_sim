@@ -1,0 +1,86 @@
+part: cam
+part_no: LSK-SH-M5-01
+name: 디텐트 캠 (H 트랙)
+material: Al 6061-T6
+stock: 17t 판재 45×60
+process: CNC 2.5D 윤곽 (트랙 정삭 1패스)
+views: [front, right]
+rev: F
+revisions:
+- {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+- {rev: B, date: 2026-11-27, desc: 'A4, 매끄러운 STEP'}
+- {rev: C, date: 2026-11-27, desc: 'A4 가로, KS 양식, 흑백'}
+- {rev: D, date: 2026-11-27, desc: 표제란·공차표·거칠기표 양식}
+- {rev: E, date: 2026-11-27, desc: 아노다이징 제외 (무처리·블라스트)}
+- {rev: F, date: '2026-11-27', desc: v0.7 좌우 반전 (운전석 +X 표준 7+R)}
+roughness_default: Ra 1.6
+remarks: 무처리 · 트랙 그리스
+finish: [트랙면 정삭 후 버핑 (Ra 0.8), 표면처리 없음 — 트랙 윤곽은 가공 치수 그대로 (옵셋 없음), '조립 시 트랙면에 그리스 얇게 (롤러 구름 접촉 마모 감소), 손맛 시험 후 트랙 마모 확인']
+dims:
+- view: front
+  type: diameter
+  center: [0, 26.5, 0]
+  r: 2.5
+  fit: H7
+  angle: 120
+- view: front
+  type: linear
+  p1: [-11, 26.5, -6]
+  p2: [11, 26.5, -6]
+  dir: h
+  side: above
+  tol: ±0.02
+- view: front
+  type: linear
+  p1: [11, 26.5, 0]
+  p2: [11, 26.5, -6]
+  dir: v
+  side: right
+  tol: ±0.02
+- view: front
+  type: linear
+  p1: [0, 26.5, 0]
+  p2: [0, 26.5, -37]
+  dir: v
+  side: left
+  text: (<>)
+- view: right
+  type: linear
+  p1: [0, 43, 16]
+  p2: [0, 26.5, 16]
+  dir: h
+  side: above
+  tol: ±0.05
+datums:
+  A:
+    view: front
+    at: [1.77, 26.5, -1.77]
+    dx: 14
+    dy: -6
+  B:
+    view: right
+    at: [0, 26.5, -20]
+    dx: -3
+    dy: -14
+gdt:
+- view: front
+  at: [0, 26.5, -37]
+  symbol: profile_line
+  tol: '0.02'
+  datums: [A, B]
+  dx: 24
+  dy: 6
+- view: right
+  at: [0, 26.5, 10]
+  symbol: flatness
+  tol: '0.02'
+  dx: 22
+  dy: 22
+roughness:
+- view: front
+  at: [-8, 26.5, -36.2]
+  value: Ra 0.8
+  dx: -26
+  dy: 8
+notes: ['트랙 프로파일 = cam.py 생성 형상 (STEP/DXF 1:1), 경로 곡률 반경 ≥ 8.6 (롤러 R8)', 'Ø5 H7: 피치축 겸 위치 기준 — ISO 7379 Ø5 숄더볼트(h8) 사용 권장 (일반 M5 볼트는 유격)', '2×M3 관통 (X ±11, Z −6) → 크래들 +Y면 탭']
+change: 좌우(Y) 반전

@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 shifter/cad/out/
 .DS_Store
+shifter/src/out/

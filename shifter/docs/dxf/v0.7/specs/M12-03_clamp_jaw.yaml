@@ -1,0 +1,77 @@
+part: clamp_jaw
+part_no: LSK-SH-M12-03
+name: 책상 클램프 아래 턱 12t
+material: Al 6061-T6
+stock: 12t 판재 60×100
+process: CNC 2.5D (판재) + M10 관통 탭
+views: [front, top]
+rev: B
+revisions:
+- {rev: A, date: 2026-11-27, desc: 최초 발행 — 데스커 책상 클램프 (상판 15~38mm)}
+- {rev: B, date: '2026-11-27', desc: v0.7 좌우 반전 (운전석 +X 표준 7+R)}
+roughness_default: Ra 3.2
+remarks: 무처리 · 블라스트
+finish: ['바리 제거, 외곽 C0.5 (윗면·아랫면), 그 외 ISO 13715 −0.2', '비드 블라스트 #150 (선택) — 표면처리 없음']
+dims:
+- view: top
+  type: linear
+  p1: [4, 58.25, -130]
+  p2: [24, 8.25, -130]
+  dir: h
+  side: above
+  tol: ±0.2
+- view: top
+  type: linear
+  p1: [4, 58.25, -130]
+  p2: [58, 46.25, -130]
+  dir: h
+  side: above
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [4, 58.25, -130]
+  p2: [24, 8.25, -130]
+  dir: v
+  side: left
+  tol: ±0.2
+- view: top
+  type: linear
+  p1: [64, 58.25, -130]
+  p2: [58, 46.25, -130]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [64, 58.25, -130]
+  p2: [58, 8.25, -130]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: top
+  type: linear
+  p1: [64, 58.25, -130]
+  p2: [58, -29.75, -130]
+  dir: v
+  side: right
+  tol: ±0.1
+- view: front
+  type: linear
+  p1: [64, 0, -142]
+  p2: [64, 0, -130]
+  dir: v
+  side: right
+  tol: ±0.1
+callouts:
+- view: top
+  at: [27.0, 5.25, -130]
+  text: [M10 탭 관통]
+  dx: -14
+  dy: -16
+- view: top
+  at: [59.94, -31.69, -130]
+  text: [3-Ø5.5 관통, 아래면 90° 접시 Ø10.4 (M5)]
+  dx: 30
+  dy: -10
+notes: [M10 탭은 윗면에 직각 (직각도 0.1) — 누름 패드(M12-04)가 책상 밑면을 고르게 누름, M10×50 육각볼트 + 출력 손잡이(M12-05)]
+change: 좌우(Y) 반전
