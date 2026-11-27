@@ -22,7 +22,8 @@ docs/                  프로젝트 공통 문서
 shifter/
   CAD/v0.X/            버전별 산출물: mach/sheet · mach/block · print · buy · assembly
   src/                 파라메트릭 CAD·도면 소스 (build123d) + 버전별 아카이브
-  firmware/            RP2040 펌웨어 (PlatformIO) + 빌드된 UF2
+  firmware/            RP2040 펌웨어 0.6 (PlatformIO) + 빌드된 UF2
+  tools/               설정 도구 (CLI, 웹 WebSerial)
   docs/                설계 문서 (현재 + 이력)
   docs/dxf/v0.X/       가공 도면 (DXF·PDF + YAML 원본: 치수·공차·기하공차·후처리)
   images/              렌더, 손맛 곡선, 배선도
