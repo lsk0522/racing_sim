@@ -1,6 +1,6 @@
 # 도면 (DXF) — 제작: Sunggwan
 
-리비전별 폴더: `v0.5/` …  각 폴더 구성
+리비전별 폴더: `v0.5/`, `v0.6/` …  각 폴더 구성
 ```
 vX.Y/
   specs/*.yaml   ← 원본. 치수·공차·기하공차·후처리를 여기에 적는다
@@ -8,7 +8,7 @@ vX.Y/
   pdf/ png/      미리보기
   INDEX.md       도면 목록
 ```
-재생성: `cd shifter/src && python3 export.py && python3 make_drawings.py --version v0.5` (한 장만: 뒤에 YAML 경로)
+재생성: `cd shifter/src && python3 export.py && python3 make_drawings.py --version v0.6` (한 장만: 뒤에 YAML 경로)
 
 형상은 `CAD/vX.Y/mach/…/<품번>_<부품>.step`(export.py 산출물)을 읽어 은선 처리한다 — 메시(STL)는 쓰지 않는다.
 날카로운 모서리와 윤곽선만 그리고, 접선(매끄럽게 이어지는) 모서리·이음선은 그리지 않는다 (ISO 128).
@@ -47,6 +47,9 @@ vX.Y/
 | `roughness` | `{view, at, value: "Ra 0.8"}` |
 | `callouts` | 구멍·탭 지시: `{view, at(구멍 가장자리 점), text: "2-M3 탭 깊이 8" 또는 [여러 줄], dx, dy}` |
 | `notes` | 추가 주기 (탭, 접시, 마스킹 등) |
+| `change` | (선택) 이전 버전 대비 바뀐 점 — `INDEX.md`의 `변경` 칸 (없으면 이전 버전과 형상 같음) |
 | `revisions` | `[{rev, date, desc}]` 리비전 표 |
+
+⚠ YAML에서 ` #`은 주석 시작 — `#120` 같은 글자가 들어간 항목은 큰따옴표로 감쌀 것 (v0.5 도면은 이 때문에 블라스트 입도가 빠져 있음).
 
 좌표는 모두 **조립 좌표계(mm)** — X 앞, Y 왼쪽, Z 위. 정면도 XZ, 평면도 XY, 우측면도 YZ. `CAD/vX.Y/assembly`의 조립 STEP에서 그대로 읽을 수 있다.

@@ -34,7 +34,8 @@ if __name__ == "__main__":
     a = ap.parse_args()
     here = os.path.dirname(os.path.abspath(__file__))
     a.out = a.out or os.path.join(here, "..", "docs", "dxf", a.version)
-    specs = a.specs or sorted(glob.glob(os.path.join(a.out, "specs", "*.yaml")))
+    natural = lambda fn: [int(t) if t.isdigit() else t for t in __import__("re").split(r"(\d+)", os.path.basename(fn))]
+    specs = a.specs or sorted(glob.glob(os.path.join(a.out, "specs", "*.yaml")), key=natural)
     for d in ("pdf", "png"):
         os.makedirs(os.path.join(a.out, d), exist_ok=True)
     index = []
@@ -47,11 +48,15 @@ if __name__ == "__main__":
         drawings.preview(dxf, out_png=os.path.join(a.out, "png", stem + ".png"),
                          out_pdf=os.path.join(a.out, "pdf", stem + ".pdf"))
         index.append((spec["part_no"], spec["name"], spec.get("material", ""), spec.get("process", ""), scale,
-                      len(spec.get("dims", [])), len(spec.get("gdt", [])), stem))
+                      len(spec.get("dims", [])), len(spec.get("gdt", [])), stem, spec.get("rev", ""),
+                      spec.get("change", "")))
         print("drawn", os.path.basename(dxf), "scale", scale)
     if not a.specs:        # 전체 생성 때만 목록 갱신
         with open(os.path.join(a.out, "INDEX.md"), "w", encoding="utf-8") as f:
-            f.write(f"# 도면 목록 {a.version} — 제작: Sunggwan\n\n| 품번 | 품명 | 재질 | 공정 | 척도 | 치수 지시 | 기하공차 | 파일 |\n|---|---|---|---|---|---|---|---|\n")
+            prev = f"v{float(a.version[1:]) - 0.1:.1f}"
+            f.write(f"# 도면 목록 {a.version} — 제작: Sunggwan\n\n"
+                    f"`변경` 칸이 비어 있는 부품은 {prev}와 형상이 같음 (도면은 {a.version} STEP에서 다시 그림, 개정 기호 그대로).\n\n"
+                    "| 품번 | 품명 | 재질 | 공정 | 척도 | 치수 지시 | 기하공차 | 개정 | 변경 | 파일 |\n|---|---|---|---|---|---|---|---|---|---|\n")
             for r in index:
                 sc = f"{r[4]:g}:1" if r[4] >= 1 else f"1:{1/r[4]:g}"
-                f.write(f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {sc} | {r[5]} | {r[6]} | [DXF]({r[7]}.dxf) · [PDF](pdf/{r[7]}.pdf) · [PNG](png/{r[7]}.png) |\n")
+                f.write(f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {sc} | {r[5]} | {r[6]} | {r[8]} | {r[9] or '—'} | [DXF]({r[7]}.dxf) · [PDF](pdf/{r[7]}.pdf) · [PNG](png/{r[7]}.png) |\n")

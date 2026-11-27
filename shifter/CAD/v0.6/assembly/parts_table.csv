@@ -33,7 +33,7 @@ M9-03,pin_collar,M9 센서 캡,print,PETG,1,12.0,4.0,12.0,M9-03_pin_collar.step 
 M10-01,panel_negY,M10 외장,mach/sheet,6061 3t,1,130.0,3.0,123.0,M10-01_panel_negY.step M10-01_panel_negY_3t.dxf
 M10-02,panel_posY,M10 외장,mach/sheet,6061 3t,1,130.0,3.0,123.0,M10-02_panel_posY.step M10-02_panel_posY_3t.dxf
 M10-03,cover_front,M10 외장,print,ABS/PETG (무광),1,11.0,112.5,123.0,M10-03_cover_front.step M10-03_cover_front.stl
-M10-04,cover_rear,M10 외장,print,ABS/PETG (무광),1,49.0,112.5,123.0,M10-04_cover_rear.step M10-04_cover_rear.stl
+M10-04,cover_rear,M10 외장,print,ABS/PETG (무광),1,48.8,112.5,123.0,M10-04_cover_rear.step M10-04_cover_rear.stl
 M10-05,window,M10 외장,buy,스모크 아크릴 1.2t,1,45.6,1.2,27.6,M10-05_window.step
 M11-01,boot_frame,M11 방진 부트,print,PETG,1,50.8,70.0,3.0,M11-01_boot_frame.step M11-01_boot_frame.stl
 M11-02,boot_collar,M11 방진 부트,print,PETG,1,14.0,14.0,6.0,M11-02_boot_collar.step M11-02_boot_collar.stl

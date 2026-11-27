@@ -1,0 +1,35 @@
+part: cradle
+part_no: LSK-SH-M3-01
+name: 크래들 (짐벌 프레임)
+material: Al 6061-T6
+stock: 블록 40×58×36
+process: CNC 3축 3면 (보어 양면 동일 셋업 권장)
+rev: D
+revisions:
+  - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
+  - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
+  - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
+  - {rev: D, date: 2026-11-27, desc: "주서 블라스트 입도 누락 수정"}
+finish:
+  - 바리 제거, 모서리 ISO 13715 −0.3, 외곽 수직 모서리 R1
+  - "비드 블라스트 #150"
+  - 투명 아노다이징 Type II 8µm — Ø16 보어 2곳, Ø5 H7 구멍 마스킹
+dims:
+  - {view: right, type: diameter, center: [18, 0, 0], r: 8.0, fit: M7, angle: 40}
+  - {view: top, type: linear, p1: [-11, 0, 12], p2: [11, 0, 12], dir: h, side: above, tol: "+0.02/0"}
+  - {view: top, type: linear, p1: [12.8, 15, 12], p2: [18, 15, 12], dir: h, side: below, tol: "+0.05/0"}
+  - {view: front, type: diameter, center: [0, -26.5, 0], r: 2.55, angle: 135}
+  - {view: front, type: linear, p1: [-18, 0, -12], p2: [-18, 0, 12], dir: v, side: left, tol: "±0.05"}
+datums:
+  A: {view: right, at: [18, 5.66, -5.66], dx: 10, dy: -10}
+gdt:
+  - {view: right, at: [18, -5.66, 5.66], symbol: coaxiality, tol: "Ø0.02", datums: [A], dx: 22, dy: 34}
+  - {view: front, at: [1.8, -26.5, 1.8], symbol: perpendicularity, tol: "Ø0.03", datums: [A], dx: -52, dy: 30}
+  - {view: front, at: [-1.8, -26.5, -1.8], symbol: position, tol: "Ø0.05", datums: [A], dx: -52, dy: 22}
+roughness:
+  - {view: right, at: [18, 0, -8], value: "Ra 0.8", dx: 6, dy: -14}
+notes:
+  - "Ø16 M7 ×2 (깊이 5.2 +0.05/0): 625ZZ 압입, 데이텀 A = 두 보어 공통축 (동축도는 반대쪽 보어)"
+  - "피치축: −Y Ø5.1 (M5 / Ø5 숄더볼트) + 안쪽 M5 너트 포켓 8.2 대변 깊이 4 / +Y Ø5 H7 (중공 핀 Ø5×3, Loctite 638 접착)"
+  - "피치축은 A축과 교차 — 위치도 Ø0.05 (두 축 교차 오차)"
+  - "−Y면 M3 탭 ×2 (캠, X ±11 Z −6), 아랫면 M3 탭 ×4 (카트리지, X ±7 Y ±23.5), 케이블 홈 3×1.5"

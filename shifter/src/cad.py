@@ -756,7 +756,8 @@ Y_NEG_IN, Y_POS_IN = -64.5, 48.0     # side-panel inner faces (clear pitch senso
 Y_NEG_OUT, Y_POS_OUT = Y_NEG_IN - PANEL_T, Y_POS_IN + PANEL_T
 Y_MID = (Y_NEG_OUT + Y_POS_OUT) / 2
 WALL = 3.0
-GAP = 1.0                            # shadow gap width/depth
+GAP = 1.0                            # shadow gap width/depth (metal–metal: gate–panel, base reveal)
+GAP_PRINT = 1.2                      # printed-part boundary (cover edge rebate, gate–cover): print tolerance
 GATE_X = (-34.0, 34.0)               # gate plate X range
 GATE_Y = (Y_NEG_IN + GAP, Y_POS_IN - GAP)
 GATE_BOLTS = [(x, y) for x in (-29.0, 28.0) for y in (-53.0, 31.0)]   # into tower top edges
@@ -766,6 +767,9 @@ S_NUT = (85.0, 94.0)                 # taper lock-nut
 S_KNOB = (94.0, 126.0)               # knob (grip centre ≈ L_KNOB 110 → cam force curve unchanged)
 MK_X = (41.5, 46.0)                  # mode knob X range (front face flush)
 DISH_R, DISH_D = 22.0, 6.5           # scalloped finger dish around the mode knob
+LABEL_SIZE, LABEL_D = 5.5, 0.5       # front H / SEQ engraving (v0.6 rev: 4.2 / 0.4 was hard to read)
+LABEL_Y = (-7.5, 37.0)               # label centres, outside the dish (dish edge on the face y −2.3 .. 28.9)
+SLEEVE_SET_Z = 88.0                  # M3 set screw in the sleeve, hidden under the lock-nut (85..94)
 
 
 def _rear_slope():
@@ -931,7 +935,7 @@ def cover_shell2d():
     S_ext = S.union(sbox(X_REAR - 5, Z_BASE - 10, X_FRONT + 5, Z_BASE + 0.001))
     inner = S_ext.buffer(-WALL, join_style=2)
     sh = S.difference(inner)
-    sh = sh.difference(sbox(GATE_X[0] - GAP, Z_TOP - WALL - 1, GATE_X[1] + GAP, Z_TOP + 1))   # gate plate pocket
+    sh = sh.difference(sbox(GATE_X[0] - GAP_PRINT, Z_TOP - WALL - 1, GATE_X[1] + GAP_PRINT, Z_TOP + 1))   # gate plate pocket
     return sh
 
 
@@ -941,17 +945,17 @@ def make_cover(front):
     p = sh.intersection(half)
     p = max(p.geoms, key=lambda g: g.area) if p.geom_type == "MultiPolygon" else p
     s = xz_prism(shapely_to_pts(p, 0.01), Y_NEG_IN, Y_POS_IN)
-    # shadow gaps along both side edges: 1 × 1 rebate on the outer skin
+    # shadow gaps along both side edges: 1.2 × 1.2 rebate on the outer skin
     S = silhouette()
-    rebate = S.difference(S.buffer(-GAP, join_style=2)).intersection(p.buffer(0.01))
+    rebate = S.difference(S.buffer(-GAP_PRINT, join_style=2)).intersection(p.buffer(0.01))
     if not rebate.is_empty:
         geoms = rebate.geoms if rebate.geom_type == "MultiPolygon" else [rebate]
         for g in geoms:
             if g.area < 0.5:
                 continue
             pts = shapely_to_pts(g, 0.01)
-            s -= xz_prism(pts, Y_NEG_IN - 1, Y_NEG_IN + GAP)
-            s -= xz_prism(pts, Y_POS_IN - GAP, Y_POS_IN + 1)
+            s -= xz_prism(pts, Y_NEG_IN - 1, Y_NEG_IN + GAP_PRINT)
+            s -= xz_prism(pts, Y_POS_IN - GAP_PRINT, Y_POS_IN + 1)
     # panel-screw bosses (Y axis, M3 heat-set insert)
     for (x, z) in panel_bolts():
         if (x > 0) != front:
@@ -969,10 +973,10 @@ def make_cover(front):
         fz0, fz1 = -38.0, Z_FRONT_KNEE - 8.0                            # recessed field (0.8) above the control strip
         f = box(X_FRONT - 0.8, X_FRONT + 1, Y_NEG_IN + 8, Y_POS_IN - 8, fz0, fz1)
         s -= f.fillet(3.0, f.edges().filter_by(Axis.X))
-        for txt, y in (("H", -7.0), ("SEQ", 36.5)):                    # mode labels (0.4 engraving)
+        for txt, y in (("H", LABEL_Y[0]), ("SEQ", LABEL_Y[1])):        # mode labels (0.5 engraving)
             try:
-                pl = Plane(origin=(X_FRONT - 0.4, y, SHAFT_Z + 3.0), x_dir=(0, 1, 0), z_dir=(1, 0, 0))
-                s -= extrude(pl * Text(txt, font_size=4.2, font="Noto Sans CJK JP"), amount=1.0)
+                pl = Plane(origin=(X_FRONT - LABEL_D, y, SHAFT_Z + 3.0), x_dir=(0, 1, 0), z_dir=(1, 0, 0))
+                s -= extrude(pl * Text(txt, font_size=LABEL_SIZE, font="Noto Sans CJK JP"), amount=1.0)
             except Exception as e:
                 print("label skipped", e)
     else:
@@ -1049,7 +1053,9 @@ def make_lever():
 
 
 def make_sleeve():
-    return cyl_z(6.0, *S_SLEEVE) - cyl_z(LEVER_D / 2, S_SLEEVE[0] - 1, S_SLEEVE[1] + 1)
+    s = cyl_z(6.0, *S_SLEEVE) - cyl_z(LEVER_D / 2, S_SLEEVE[0] - 1, S_SLEEVE[1] + 1)
+    s -= cyl_x(1.25, -7.0, 0.0, y=0.0, z=SLEEVE_SET_Z)               # M3 tap (Ø2.5), rear side, hidden by the lock-nut
+    return s
 
 
 def make_lock_nut():

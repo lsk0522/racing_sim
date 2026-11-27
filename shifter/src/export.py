@@ -127,5 +127,7 @@ if __name__ == "__main__":
         w.writerow(["품번", "부품", "모듈", "폴더", "소재", "수량", "X", "Y", "Z", "파일"])
         w.writerows(table)
     shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)), "BOM.csv"), f"{OUT}/buy/BOM.csv")
+    import boot_pattern                                   # M11-03 inner boot cutting pattern (DXF/PDF/PNG 1:1)
+    boot_pattern.main(f"{OUT}/buy")
     for r in table:
         print(r[:6])
