@@ -6,9 +6,11 @@ stock: 3t 판재 135×128
 process: CNC 2.5D (판재) — 외곽·관통 → 바깥면 필드 포켓 → 챔퍼, 아노다이징 후 챔퍼 재가공
 views: [front, top]
 hidden_views: []
-rev: A
+rev: B
+paper: A3
 revisions:
   - {rev: A, date: 2026-11-27, desc: "v0.6 최초 발행"}
+  - {rev: B, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
 roughness_default: Ra 1.6
 finish:
   - 바리 제거, 지시 없는 모서리 ISO 13715 −0.2

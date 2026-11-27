@@ -4,13 +4,15 @@ name: +Y 타워
 material: Al 6061-T6
 stock: 6t 판재 125×125
 process: CNC 2.5D (판재)
-rev: E
+rev: F
+paper: A3
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
   - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
   - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
   - {rev: E, date: 2026-11-27, desc: "v0.6: 윗변 53, 탭 −29/28"}
+  - {rev: F, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
 finish:
   - 바리 제거, 모서리 ISO 13715 −0.3
   - "비드 블라스트 #120"
@@ -34,7 +36,7 @@ gdt:
 roughness:
   - {view: front, at: [5.66, 31, -5.66], value: "Ra 1.6", dx: 8, dy: -16}
 callouts:
-  - {view: front, at: [11.9, 31, -0.9], text: ["2-M3 탭 관통", "(센서 캡)"], dx: 30, dy: -42}
+  - {view: front, at: [11.9, 31, -0.9], text: ["2-M3 탭 관통", "(센서 캡)"], dx: 42, dy: -80}
   - {view: top, at: [-29, 31, 53], text: "2-M3 탭 깊이 8 (게이트, X −29 / 28)", dx: -14, dy: 14}
 notes:
   - "Ø16 M7 보어: F625ZZ 플랜지 베어링 압입 (바깥면에서), 중공 핀(Ø5×3) 통과, 반대쪽 타워(M2-01)와 위치 동일 가공"

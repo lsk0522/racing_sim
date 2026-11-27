@@ -6,13 +6,15 @@ stock: 4t 판재 75×115
 process: CNC 2.5D (판재) + 각인 + 아래면 막힌 탭
 views: [front, top]
 hidden_views: [top]
-rev: E
+rev: F
+paper: A3
 revisions:
   - {rev: A, date: 2026-11-27, desc: 최초 발행 (A3)}
   - {rev: B, date: 2026-11-27, desc: "A4, 매끄러운 STEP"}
   - {rev: C, date: 2026-11-27, desc: "A4 가로, KS 양식, 흑백"}
   - {rev: D, date: 2026-11-27, desc: "표제란·공차표·거칠기표 양식"}
   - {rev: E, date: 2026-11-27, desc: "v0.6: 4t 68×110.5, 부트 탭"}
+  - {rev: F, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
 roughness_default: Ra 1.6
 finish:
   - 게이트 슬롯 모서리 C0.6 (윗면), 슬롯 안쪽 R0.3 (레버 닿는 면), 외곽 C0.6, 그 외 ISO 13715 −0.2

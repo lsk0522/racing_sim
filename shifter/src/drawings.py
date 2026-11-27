@@ -1,9 +1,9 @@
 # LSK H/SEQ Shifter — author: Sunggwan
 """
-도면 생성기: 부품 STEP + 도면 스펙 YAML → A4 가로 DXF (+ PDF/PNG 미리보기), 흑백
+도면 생성기: 부품 STEP + 도면 스펙 YAML → A4/A3 가로 DXF (+ PDF/PNG 미리보기), 흑백
 
 적용 규격
- - 용지: A4 가로, 윤곽선(사방 10mm) + 중심 마크, 아래에 저작권 문구·용지 크기
+ - 용지: A4 가로 (기본) / A3 가로 (YAML `paper: A3`, 큰 판재 부품), 윤곽선(사방 10mm) + 중심 마크, 아래에 저작권 문구·용지 크기
  - 양식 (실무 도면 형식): 오른쪽 아래 표제란 = 부품 행(NO·DESCRIPTION·MATERIAL·QTY·SIZE·REMARKS)
    + 가공 기호표(CLASS OF FINISH) + 일반 공차표(ISO 2768-m) + 로고·결재(DESIGNED·CHECKED·APPROVED)·제목
    + 단위·척도·질량·투상법·도번 / 왼쪽 아래 개정란(△) / 오른쪽 위 표면 거칠기 일괄 지시 (ISO 1302)
@@ -35,7 +35,9 @@ from OCP.BRepLib import BRepLib
 from OCP.GeomAbs import GeomAbs_Line, GeomAbs_Circle
 from OCP.GCPnts import GCPnts_AbscissaPoint
 
-A4 = (297.0, 210.0)                            # A4 가로 (기본)
+PAPERS = {"A4": (297.0, 210.0), "A3": (420.0, 297.0)}   # 가로 (ISO 216)
+PAPER = "A4"                                   # 기본
+SHEET = PAPERS[PAPER]
 FRAME = (10.0, 10.0, 287.0, 200.0)             # 윤곽선 (사방 10mm)
 TH = 3.5                                       # 치수 문자 (KS·ISO 3098 3.5)
 TN = 3.0                                       # 주서 문자
@@ -344,14 +346,14 @@ def add_dim(msp, d, P, scale, vbox=None, stack=None):
 
 # ---------------------------------------------------------------- 용지 (윤곽선 + 중심 마크)
 def sheet_frame(msp):
-    W, H = A4
+    W, H = SHEET
     x0, y0, x1, y1 = FRAME
     rect(msp, x0, y0, x1, y1, "FRAME")                              # 윤곽선 0.7
     for (a, b) in [((W / 2, 0), (W / 2, y0)), ((W / 2, H), (W / 2, y1 - 5)),   # 중심 마크 (아래는 표제란이 있어 윤곽선까지)
                    ((0, H / 2), (x0 + 5, H / 2)), ((W, H / 2), (x1 - 5, H / 2))]:
         msp.add_line(a, b, dxfattribs={"layer": "FRAME"})
     text(msp, "이 도면의 저작권은 Sunggwan에게 있으며, 허락 없이 복제·전달·사용할 수 없습니다.", x0 + 2, y0 / 2, 1.8)
-    text(msp, f"A4 ({W:g}×{H:g})", x1, y0 / 2, 1.8, align=TextEntityAlignment.MIDDLE_RIGHT)
+    text(msp, f"{PAPER} ({W:g}×{H:g})", x1, y0 / 2, 1.8, align=TextEntityAlignment.MIDDLE_RIGHT)
 
 
 def cell(msp, x0, y0, x1, y1, value="", vh=TN, align="center", label="", lh=1.5):
@@ -393,6 +395,14 @@ GT_ROWS = [("0.5 ~ 6", "±0.1"), ("6 ~ 30", "±0.2"), ("30 ~ 120", "±0.3"), ("1
 FIN_ROWS = [(False, "소재면"), (True, "Ra 12.5"), (True, "Ra 6.3"), (True, "Ra 3.2"), (True, "Ra 1.6"), (True, "Ra 0.8")]
 TB_W, TB_H = 175.0, 46.0
 TB_X0 = FRAME[2] - TB_W
+
+
+def set_paper(name):
+    """용지 바꾸기 (윤곽선·표제란 위치가 따라감). 표제란·개정란·문자 크기는 용지와 관계없이 같음."""
+    global PAPER, SHEET, FRAME, TB_X0
+    PAPER = name; SHEET = PAPERS[name]
+    FRAME = (10.0, 10.0, SHEET[0] - 10.0, SHEET[1] - 10.0)
+    TB_X0 = FRAME[2] - TB_W
 REV_W = 90.0
 
 
@@ -568,7 +578,9 @@ def place_views(sizes, margins, obstacles, scales, inner, ann_fn=None):
 # ---------------------------------------------------------------- 메인
 def make_drawing(spec, shape, outdir, rev_date=None):
     rev_date = rev_date or datetime.date.today()
+    set_paper(spec.get("paper", "A4"))
     doc = setup_doc(); msp = doc.modelspace()
+    doc.header.custom_vars.append("PAPER", PAPER)      # 미리보기·PDF 용지 크기 ($LIMMAX는 ezdxf가 저장 때 덮어씀)
     sheet_frame(msp)
     views = spec.get("views", ["front", "top", "right"])
     proj = {v: project(shape, v) for v in views}
@@ -753,12 +765,16 @@ def preview(dxf_path, out_png=None, out_pdf=None):
     from ezdxf.addons.drawing.config import Configuration, LineweightPolicy, BackgroundPolicy, ColorPolicy, LinePolicy
     doc = ezdxf.readfile(dxf_path)
     doc.styles.get("KR").dxf.font = FONT_PREVIEW
-    fig = plt.figure(figsize=(A4[0] / 25.4, A4[1] / 25.4))
+    paper = doc.header.custom_vars.get("PAPER") if doc.header.custom_vars.has_tag("PAPER") else "A4"
+    W, H = PAPERS.get(paper, PAPERS["A4"])
+    fig = plt.figure(figsize=(W / 25.4, H / 25.4))
     ax = fig.add_axes([0, 0, 1, 1])
     cfg = Configuration(lineweight_policy=LineweightPolicy.ABSOLUTE, background_policy=BackgroundPolicy.WHITE,
                         color_policy=ColorPolicy.BLACK, line_policy=LinePolicy.ACCURATE)
     Frontend(RenderContext(doc), MatplotlibBackend(ax), config=cfg).draw_layout(doc.modelspace(), finalize=True)
-    ax.set_xlim(0, A4[0]); ax.set_ylim(0, A4[1]); ax.set_aspect("equal"); ax.axis("off")
+    ax.set_xlim(0, W); ax.set_ylim(0, H); ax.set_aspect("equal"); ax.axis("off")
+    ax.set_position([0, 0, 1, 1])
+    fig.set_size_inches(W / 25.4, H / 25.4)        # finalize가 줄인 종이 크기를 실제 용지로 (PDF 1:1 인쇄)
     if out_png:
         fig.savefig(out_png, dpi=200, facecolor="white")
     if out_pdf:

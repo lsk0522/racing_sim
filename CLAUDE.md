@@ -12,7 +12,7 @@
   - 파일 이름은 `품번_부품` (예: `M2-01_tower_negY.step`). 새 부품은 `export.py`의 `CATALOG`에 품번·폴더를 등록.
 - 도면은 `shifter/docs/dxf/vX.Y/specs/*.yaml`이 원본 (치수·공차·기하공차·후처리). 수정 후 `src/make_drawings.py`로 DXF·PDF·PNG 재생성.
   - 도면 형상은 `export.py`가 만든 **STEP**에서 은선 처리한다 (STL·메시 금지). 순서: `check.py` → `export.py` → `make_drawings.py`.
-  - 용지는 **A4 가로가 기본**, **흑백**(흰 바탕·검정 선, 굵기·선 종류로만 구분). 윤곽선 + 중심 마크만 (구역 표시 없음).
+  - 용지는 **A4 가로가 기본**, 큰 판재 부품(베이스·타워·게이트·사이드 패널)은 YAML `paper: A3`로 **A3 가로**. **흑백**(흰 바탕·검정 선, 굵기·선 종류로만 구분). 윤곽선 + 중심 마크만 (구역 표시 없음).
   - 양식 (실무 도면 형식, 11-27 확정): 윤곽선 사방 10mm + 중심 마크, 오른쪽 위 표면 거칠기 일괄 지시,
     오른쪽 아래 표제란 = 부품 행(NO·DESCRIPTION·MATERIAL·QTY·SIZE·REMARKS) + CLASS OF FINISH 표 + 일반 공차표(ISO 2768-m)
     + 로고·DESIGNED/CHECKED/APPROVED·TITLE + UNIT·SCALE·MASS·PROJ.·DWG NO., 왼쪽 아래 개정란(△), 윤곽선 밖 저작권 문구·용지 크기.
