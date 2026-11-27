@@ -6,13 +6,15 @@ stock: Ø20 봉 50
 process: 선반 (외경·나사·보어) + 측면 탭
 views: [front, top]
 hidden_views: [front]
-rev: A
+rev: B
 revisions:
   - {rev: A, date: 2026-11-27, desc: "v0.6 최초 발행"}
+  - {rev: B, date: 2026-11-27, desc: "아노다이징 제외 (무처리·블라스트)"}
 roughness_default: Ra 1.6
+remarks: 무처리
 finish:
   - 바리 제거, 양 끝 C0.5, 나사 시작부 C1 (45°)
-  - "SUS303 무처리 (비드 블라스트 #180 선택) / 6061이면 그래파이트 아노다이징 Type II — 나사부 마스킹"
+  - "SUS303 무처리 (비드 블라스트 #180 선택, 나사부 마스킹)"
 dims:
   - {view: front, type: linear, p1: [6, 0, 72], p2: [6, 0, 108], dir: v, side: right, tol: "±0.1"}
   - {view: front, type: linear, p1: [6, 0, 85], p2: [6, 0, 108], dir: v, side: right, offset: 18, tol: "±0.2"}

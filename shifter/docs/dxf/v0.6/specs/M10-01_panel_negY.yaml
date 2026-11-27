@@ -3,20 +3,22 @@ part_no: LSK-SH-M10-01
 name: 사이드 패널 −Y (창)
 material: Al 6061-T6
 stock: 3t 판재 135×128
-process: CNC 2.5D (판재) — 외곽·관통 → 바깥면 필드 포켓 → 챔퍼, 아노다이징 후 챔퍼 재가공
+process: CNC 2.5D (판재) — 외곽·관통 → 바깥면 필드 포켓 → 챔퍼, 블라스트 후 챔퍼 재가공
 views: [front, top]
 hidden_views: []
-rev: B
+rev: C
 paper: A3
 revisions:
   - {rev: A, date: 2026-11-27, desc: "v0.6 최초 발행"}
   - {rev: B, date: 2026-11-27, desc: "A3 가로 (큰 판재)"}
+  - {rev: C, date: 2026-11-27, desc: "아노다이징 제외 (무처리·블라스트)"}
 roughness_default: Ra 1.6
+remarks: 무처리 · 블라스트
 finish:
   - 바리 제거, 지시 없는 모서리 ISO 13715 −0.2
   - "비드 블라스트 #180 (바깥면 전체)"
-  - 그래파이트 아노다이징 Type II 10~15µm (ISO 7599) — 베이스·게이트와 같은 색
-  - 아노다이징 후 챔퍼 재가공 (외곽 C1.2, 필드·메달리온 테두리 C0.5, 창 C0.4) → 가공면 노출
+  - 블라스트 후 챔퍼 재가공 (외곽 C1.2, 필드·메달리온 테두리 C0.5, 창 C0.4) → 가공면 노출
+  - (선택) 무광 투명 클리어 코트 — 지문·산화 방지 (아노다이징 안 함)
 dims:
   - {view: front, type: linear, p1: [-84, -67.5, -66], p2: [46, -67.5, -66], dir: h, side: below, tol: "±0.1"}
   - {view: front, type: linear, p1: [46, -67.5, -66], p2: [46, -67.5, 57], dir: v, side: right, tol: "±0.1"}

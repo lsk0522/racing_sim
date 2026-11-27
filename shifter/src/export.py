@@ -57,11 +57,18 @@ CATALOG = [
     ("M10-05", "window",          "M10 외장",          "buy",        "스모크 아크릴 1.2t", None, 1),
     ("M11-01", "boot_frame",      "M11 방진 부트",      "print",      "PETG",          (Axis.X, 180), 1),
     ("M11-02", "boot_collar",     "M11 방진 부트",      "print",      "PETG",          None, 1),
+    ("M12-01", "clamp_plate",     "M12 책상 클램프",    "mach/sheet", "6061 6t",       None, 1),
+    ("M12-02", "clamp_spine",     "M12 책상 클램프",    "mach/sheet", "6061 12t",      None, 1),
+    ("M12-03", "clamp_jaw",       "M12 책상 클램프",    "mach/sheet", "6061 12t",      None, 1),
+    ("M12-04", "clamp_pad",       "M12 책상 클램프",    "print",      "PETG",          None, 1),
+    ("M12-05", "clamp_knob",      "M12 책상 클램프",    "print",      "PETG",          (Axis.X, 180), 1),
+    ("M12-06", "clamp_bolt",      "M12 책상 클램프",    "buy",        "M10×50 육각볼트", None, 1),
 ]
 # 판재 부품의 1:1 외곽 DXF: 부품 → (2D 키, 두께 표기)
 SHEET_DXF = {"base": ("base", "8t"), "tower_negY": ("tower_negY", "6t"), "tower_posY": ("tower_posY", "6t"),
              "cam": ("cam_H", "16.5t"), "arm_plate": ("arm_plate", "3t_x2"), "gate": ("gate", "4t"),
-             "panel_negY": ("panel_negY", "3t"), "panel_posY": ("panel_posY", "3t")}
+             "panel_negY": ("panel_negY", "3t"), "panel_posY": ("panel_posY", "3t"),
+             "clamp_plate": ("clamp_plate", "6t")}
 SUB_ASSEMBLIES = ["arm"]          # 여러 부품이 합쳐진 형상 → assembly/sub
 
 
