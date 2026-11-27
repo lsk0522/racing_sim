@@ -12,7 +12,7 @@
   - `check.py`는 1 mm³ 이하 겹침도 '작은 겹침 경고'로 출력 → 새 경고가 생기면 원인 확인. 움직임 최소 틈은 `review_fusion.py sweep`.
   - `CAD/vX.Y/mach/sheet` 판재 가공 · `mach/block` 블록·봉 가공 · `print` 출력 · `buy` 구매품 · `assembly` 조립
   - 파일 이름은 `품번_부품` (예: `M2-01_tower_negY.step`). 새 부품은 `export.py`의 `CATALOG`에 품번·폴더를 등록.
-- Fusion 작업용 묶음: `export.py` 다음에 `src/fusion_pack.py` → `CAD/vX.Y/fusion/` (이름 붙은 조립 STEP·PARAMS.csv). 시작 프롬프트는 `fusion/README_FUSION.md` (프로젝트 문서 `claude/NEXT_PROMPT_fusion.md`와 같게 유지). Fusion에서 바꾼 내용은 프로젝트 문서 `claude/FUSION_CHANGES.md`로 받아 `cad.py`에 반영한다 (원본은 파이썬).
+- Fusion 작업용 묶음: `export.py` 다음에 `src/fusion_pack.py` → `CAD/vX.Y/fusion/` (이름 붙은 조립 STEP·PARAMS.csv). 시작 프롬프트는 `fusion/README_FUSION.md` (프로젝트 문서 `claude/NEXT_PROMPT_fusion.md`와 같게 유지). Fusion에서 바꾼 내용은 프로젝트 문서 `claude/FUSION_CHANGES.md`로 받아 `cad_model.py`에 반영한다 (원본은 파이썬, FUSION_CHANGES 좌표는 v0.7 최종 좌표 → Y 부호 반대로 넣기).
 - 도면은 `shifter/docs/dxf/vX.Y/specs/*.yaml`이 원본 (치수·공차·기하공차·후처리). 수정 후 `src/make_drawings.py`로 DXF·PDF·PNG 재생성.
   - 도면 형상은 `export.py`가 만든 **STEP**에서 은선 처리한다 (STL·메시 금지). 순서: `check.py` → `export.py` → `make_drawings.py`.
   - 용지는 **A4 가로가 기본**, 큰 판재 부품(베이스·타워·게이트·사이드 패널)은 YAML `paper: A3`로 **A3 가로**. **흑백**(흰 바탕·검정 선, 굵기·선 종류로만 구분). 윤곽선 + 중심 마크만 (구역 표시 없음).
